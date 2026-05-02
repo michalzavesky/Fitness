@@ -3,571 +3,493 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Květen 2026 – Příprava na výběrko ZJ</title>
+<title>Květen 2026 – Příprava na výběrko ZJ Teplice </title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    min-height: 100vh;
-    background: #0a0a0f;
-    color: #e8e8f0;
-    font-family: 'Courier New', monospace;
-    padding: 24px 16px;
-  }
-  .header { text-align: center; margin-bottom: 32px; }
-  .header-sub { font-size: 11px; letter-spacing: 6px; color: #666; margin-bottom: 8px; text-transform: uppercase; }
-  .header h1 {
-    font-size: 32px; font-weight: 900; letter-spacing: -1px;
-    background: linear-gradient(135deg, #FF4B4B, #C84BFF);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .header-desc { font-size: 13px; color: #888; margin-top: 8px; }
-  .header-desc span { color: #C84BFF; font-weight: 700; }
-  .week-pills { display: flex; gap: 8px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
-  .pill {
-    padding: 6px 14px; border-radius: 20px; border: 1px solid #333;
-    background: transparent; color: #888; cursor: pointer;
-    font-size: 12px; font-family: inherit; transition: all 0.2s;
-  }
-  .pill.active { border-color: #FF4B4B; background: rgba(255,75,75,0.15); color: #FF4B4B; }
-  .week-container { max-width: 680px; margin: 0 auto; display: none; }
-  .week-container.active { display: block; }
-  .week-meta { margin-bottom: 16px; }
-  .week-dates { font-size: 11px; color: #666; letter-spacing: 3px; text-transform: uppercase; }
-  .week-note { font-size: 13px; color: #aaa; margin-top: 4px; }
-  .day { margin-bottom: 8px; }
-  .day-header {
-    width: 100%; text-align: left; padding: 14px 18px;
-    border-radius: 12px; border: 1px solid #222;
-    background: rgba(255,255,255,0.03);
-    cursor: pointer; font-family: inherit;
-    transition: all 0.2s; display: flex; align-items: center; gap: 12;
-    gap: 12px;
-  }
-  .day-header.open { border-radius: 12px 12px 0 0; }
-  .day-date { font-size: 12px; color: #555; min-width: 70px; }
-  .day-tag {
-    font-size: 10px; letter-spacing: 2px; font-weight: 700;
-    padding: 2px 8px; border-radius: 4px; border: 1px solid; white-space: nowrap;
-  }
-  .day-total { font-size: 13px; color: #aaa; flex: 1; }
-  .day-arrow { color: #555; font-size: 14px; margin-left: auto; }
-  .day-body {
-    border: 1px solid; border-top: none;
-    border-radius: 0 0 12px 12px;
-    background: rgba(0,0,0,0.4);
-    padding: 16px 18px;
-    display: none;
-  }
-  .day-body.open { display: block; }
-  .step {
-    display: flex; gap: 12px; padding-bottom: 14px; margin-bottom: 14px;
-    border-bottom: 1px solid #1a1a2e;
-  }
-  .step:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-  .step-icon { font-size: 20px; min-width: 28px; }
-  .step-info { flex: 1; }
-  .step-name { font-size: 13px; font-weight: 700; color: #e8e8f0; margin-bottom: 2px; }
-  .step-detail { font-size: 12px; color: #aaa; }
-  .step-dur { font-size: 11px; color: #555; white-space: nowrap; padding-top: 2px; }
-  .garmin-box {
-    margin-top: 16px; padding: 10px 14px; border-radius: 8px;
-    background: rgba(255,255,255,0.04); border: 1px dashed #333;
-  }
-  .garmin-label { font-size: 10px; color: #555; letter-spacing: 2px; margin-bottom: 4px; }
-  .garmin-text { font-size: 12px; color: #888; }
-  .week-summary {
-    margin-top: 16px; padding: 14px 18px; border-radius: 12px;
-    background: rgba(255,255,255,0.03); border: 1px solid #1e1e2e;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .summary-label { font-size: 10px; color: #555; letter-spacing: 2px; margin-bottom: 4px; }
-  .summary-val { font-size: 22px; font-weight: 900; color: #e8e8f0; }
-  .summary-val.red { color: #FF4B4B; }
-  .legend {
-    max-width: 680px; margin: 24px auto 0;
-    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
-  }
-  .legend-item { display: flex; align-items: center; gap: 6px; }
-  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
-  .legend-text { font-size: 11px; color: #666; }
-
-  /* Type colors */
-  .type-intervals .day-header.open, .type-intervals .day-header:hover { border-color: #FF4B4B; background: rgba(255,75,75,0.12); }
-  .type-intervals .day-tag { color: #FF4B4B; border-color: #FF4B4B; }
-  .type-intervals .day-body { border-color: #FF4B4B; }
-
-  .type-tempo .day-header.open, .type-tempo .day-header:hover { border-color: #FFB84B; background: rgba(255,184,75,0.12); }
-  .type-tempo .day-tag { color: #FFB84B; border-color: #FFB84B; }
-  .type-tempo .day-body { border-color: #FFB84B; }
-
-  .type-easy .day-header.open, .type-easy .day-header:hover { border-color: #4BFF9E; background: rgba(75,255,158,0.1); }
-  .type-easy .day-tag { color: #4BFF9E; border-color: #4BFF9E; }
-  .type-easy .day-body { border-color: #4BFF9E; }
-
-  .type-long .day-header.open, .type-long .day-header:hover { border-color: #4B9EFF; background: rgba(75,158,255,0.12); }
-  .type-long .day-tag { color: #4B9EFF; border-color: #4B9EFF; }
-  .type-long .day-body { border-color: #4B9EFF; }
-
-  .type-rest .day-header.open, .type-rest .day-header:hover { border-color: #555; background: rgba(136,136,136,0.08); }
-  .type-rest .day-tag { color: #888; border-color: #555; }
-  .type-rest .day-body { border-color: #555; }
-
-  .type-cooper .day-header.open, .type-cooper .day-header:hover { border-color: #C84BFF; background: rgba(200,75,255,0.15); }
-  .type-cooper .day-tag { color: #C84BFF; border-color: #C84BFF; }
-  .type-cooper .day-body { border-color: #C84BFF; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { min-height: 100vh; background: #0a0a0f; color: #e8e8f0; font-family: 'Courier New', monospace; padding: 24px 16px; }
+.header { text-align: center; margin-bottom: 32px; }
+.header-sub { font-size: 11px; letter-spacing: 6px; color: #666; margin-bottom: 8px; text-transform: uppercase; }
+.header h1 { font-size: 32px; font-weight: 900; letter-spacing: -1px; background: linear-gradient(135deg, #FF4B4B, #C84BFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.header-desc { font-size: 13px; color: #888; margin-top: 8px; }
+.header-desc span { color: #C84BFF; font-weight: 700; }
+.pace-box { max-width: 680px; margin: 0 auto 28px; background: rgba(255,255,255,0.03); border: 1px solid #1e1e2e; border-radius: 12px; padding: 16px 18px; }
+.pace-box-title { font-size: 10px; letter-spacing: 3px; color: #555; text-transform: uppercase; margin-bottom: 12px; }
+.pace-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+.pace-item { padding: 8px 12px; border-radius: 8px; border: 1px solid; flex: 1; min-width: 130px; }
+.p-label { font-size: 10px; letter-spacing: 1px; margin-bottom: 4px; }
+.p-val { font-size: 15px; font-weight: 700; color: #e8e8f0; }
+.week-pills { display: flex; gap: 8px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+.pill { padding: 6px 14px; border-radius: 20px; border: 1px solid #333; background: transparent; color: #888; cursor: pointer; font-size: 12px; font-family: inherit; transition: all 0.2s; }
+.pill.active { border-color: #FF4B4B; background: rgba(255,75,75,0.15); color: #FF4B4B; }
+.week-container { max-width: 680px; margin: 0 auto; display: none; }
+.week-container.active { display: block; }
+.week-meta { margin-bottom: 16px; }
+.week-dates { font-size: 11px; color: #666; letter-spacing: 3px; text-transform: uppercase; }
+.week-note { font-size: 13px; color: #aaa; margin-top: 4px; }
+.day { margin-bottom: 8px; }
+.day-header { width: 100%; text-align: left; padding: 14px 18px; border-radius: 12px; border: 1px solid #222; background: rgba(255,255,255,0.03); cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 12px; }
+.day-header.open { border-radius: 12px 12px 0 0; }
+.day-date { font-size: 12px; color: #555; min-width: 78px; }
+.day-tag { font-size: 10px; letter-spacing: 2px; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid; white-space: nowrap; }
+.day-total { font-size: 13px; color: #aaa; flex: 1; }
+.day-arrow { color: #555; font-size: 14px; margin-left: auto; flex-shrink: 0; }
+.day-body { border: 1px solid; border-top: none; border-radius: 0 0 12px 12px; background: rgba(0,0,0,0.4); padding: 16px 18px; display: none; }
+.day-body.open { display: block; }
+.step { display: flex; gap: 12px; padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid #1a1a2e; }
+.step:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.step-icon { font-size: 20px; min-width: 28px; }
+.step-info { flex: 1; }
+.step-name { font-size: 13px; font-weight: 700; color: #e8e8f0; margin-bottom: 2px; }
+.step-detail { font-size: 12px; color: #aaa; line-height: 1.5; }
+.step-dur { font-size: 11px; color: #555; white-space: nowrap; padding-top: 2px; }
+.garmin-box { margin-top: 16px; padding: 10px 14px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px dashed #333; }
+.garmin-label { font-size: 10px; color: #555; letter-spacing: 2px; margin-bottom: 4px; }
+.garmin-text { font-size: 12px; color: #888; }
+.week-summary { margin-top: 16px; padding: 14px 18px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid #1e1e2e; display: flex; justify-content: space-between; align-items: center; }
+.summary-label { font-size: 10px; color: #555; letter-spacing: 2px; margin-bottom: 4px; }
+.summary-val { font-size: 22px; font-weight: 900; color: #e8e8f0; }
+.summary-val.red { color: #FF4B4B; }
+.legend { max-width: 680px; margin: 24px auto 0; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+.legend-text { font-size: 11px; color: #666; }
+.type-done .day-header { border-color: rgba(75,255,158,0.3); background: rgba(75,255,158,0.04); }
+.type-done .day-tag { color: #4BFF9E; border-color: #4BFF9E; }
+.type-done .day-body { border-color: #4BFF9E; }
+.type-done .day-date { color: #4BFF9E; }
+.type-intervals .day-header.open,.type-intervals .day-header:hover { border-color: #FF4B4B; background: rgba(255,75,75,0.12); }
+.type-intervals .day-tag { color: #FF4B4B; border-color: #FF4B4B; }
+.type-intervals .day-body { border-color: #FF4B4B; }
+.type-tempo .day-header.open,.type-tempo .day-header:hover { border-color: #FFB84B; background: rgba(255,184,75,0.12); }
+.type-tempo .day-tag { color: #FFB84B; border-color: #FFB84B; }
+.type-tempo .day-body { border-color: #FFB84B; }
+.type-easy .day-header.open,.type-easy .day-header:hover { border-color: #4BFF9E; background: rgba(75,255,158,0.1); }
+.type-easy .day-tag { color: #4BFF9E; border-color: #4BFF9E; }
+.type-easy .day-body { border-color: #4BFF9E; }
+.type-long .day-header.open,.type-long .day-header:hover { border-color: #4B9EFF; background: rgba(75,158,255,0.12); }
+.type-long .day-tag { color: #4B9EFF; border-color: #4B9EFF; }
+.type-long .day-body { border-color: #4B9EFF; }
+.type-rest .day-header { cursor: default; }
+.type-rest .day-tag { color: #888; border-color: #555; }
+.type-cooper .day-header.open,.type-cooper .day-header:hover { border-color: #C84BFF; background: rgba(200,75,255,0.15); }
+.type-cooper .day-tag { color: #C84BFF; border-color: #C84BFF; }
+.type-cooper .day-body { border-color: #C84BFF; }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-sub">Příprava na výběrko ZJ</div>
-  <h1>KVĚTEN 2026</h1>
-  <div class="header-desc">Fáze 1 — Základ rychlosti · Cíl Cooper: <span>2600 m</span></div>
-  <div class="week-pills">
-    <button class="pill active" onclick="showWeek(0)">T1 · 29 km</button>
-    <button class="pill" onclick="showWeek(1)">T2 · 41 km</button>
-    <button class="pill" onclick="showWeek(2)">T3 · 44 km</button>
-    <button class="pill" onclick="showWeek(3)">T4 · 34 km</button>
-    <button class="pill" onclick="showWeek(4)">T5 · 22 km</button>
-  </div>
+<div class="header-sub">Příprava na výběrko ZJ · Fáze 1</div>
+<h1>KVĚTEN 2026</h1>
+<div class="header-desc">Základ rychlosti · Cooper 2.5.: 2500 m → Cíl 30.5.: <span>2600+ m</span></div>
+<div class="week-pills">
+<button class="pill active" onclick="showWeek(0)">Víkend 2–3.5.</button>
+<button class="pill" onclick="showWeek(1)">T1 · 4–10.5. · 30km</button>
+<button class="pill" onclick="showWeek(2)">T2 · 11–17.5. · 41km</button>
+<button class="pill" onclick="showWeek(3)">T3 · 18–24.5. · 45km</button>
+<button class="pill" onclick="showWeek(4)">T4+Cooper · 25–30.5.</button>
+</div>
 </div>
 
-<!-- TÝDEN 1 -->
+<div class="pace-box">
+<div class="pace-box-title">Tvoje tréninková tempa – celý květen</div>
+<div class="pace-grid">
+<div class="pace-item" style="border-color:#4BFF9E;background:rgba(75,255,158,0.05)"><div class="p-label" style="color:#4BFF9E">LEHKÝ KLUS</div><div class="p-val">6:20–6:40/km</div></div>
+<div class="pace-item" style="border-color:#4B9EFF;background:rgba(75,158,255,0.05)"><div class="p-label" style="color:#4B9EFF">DLOUHÝ VÝBĚH</div><div class="p-val">6:00–6:20/km</div></div>
+<div class="pace-item" style="border-color:#FFB84B;background:rgba(255,184,75,0.05)"><div class="p-label" style="color:#FFB84B">TEMPO T1–T2</div><div class="p-val">5:15/km</div></div>
+<div class="pace-item" style="border-color:#FF9020;background:rgba(255,144,32,0.05)"><div class="p-label" style="color:#FF9020">TEMPO T3–T4</div><div class="p-val">5:05–5:10/km</div></div>
+<div class="pace-item" style="border-color:#FF4B4B;background:rgba(255,75,75,0.05)"><div class="p-label" style="color:#FF4B4B">INTERVALY T1–T2</div><div class="p-val">4:45/km</div></div>
+<div class="pace-item" style="border-color:#cc3333;background:rgba(200,50,50,0.05)"><div class="p-label" style="color:#cc3333">INTERVALY T3–T4</div><div class="p-val">4:40/km</div></div>
+</div>
+</div>
+
+<!-- VÍKEND -->
 <div class="week-container active" id="week-0">
-  <div class="week-meta">
-    <div class="week-dates">Týden 1 · 1.5. – 4.5.</div>
-    <div class="week-note">Začínáme opatrně – tělo se adaptuje na novou intenzitu</div>
-  </div>
-
-  <div class="day type-intervals">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Pá 2.5.</span>
-      <span class="day-tag">INTERVALY</span>
-      <span class="day-total">~7.5 km | ~50 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km lehký klus @ 6:30/km</div></div><span class="step-dur">~12 min</span></div>
-      <div class="step"><span class="step-icon">🤸</span><div class="step-info"><div class="step-name">Dynamický strečink</div><div class="step-detail">Výpady, přednožování, kolena nahoru</div></div><span class="step-dur">5 min</span></div>
-      <div class="step"><span class="step-icon">⚡</span><div class="step-info"><div class="step-name">8× 400 m INTERVAL</div><div class="step-detail">Tempo 4:10/km — po každém 90 s chůze/lehký klus</div></div><span class="step-dur">~24 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km chůze + statický strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Interval: 8× [400m @ 4:10/km + 90s recovery]</div></div>
-    </div>
-  </div>
-
-  <div class="day type-long">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">So 3.5.</span>
-      <span class="day-tag">DLOUHÝ VÝBĚH</span>
-      <span class="day-total">~13 km | ~85 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🚶</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">1 km chůze</div></div><span class="step-dur">10 min</span></div>
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Výběh</div><div class="step-detail">11 km @ 6:00/km — musíš být schopen normálně mluvit</div></div><span class="step-dur">~66 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km chůze + strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 11 000 m @ 5:50–6:10/km</div></div>
-    </div>
-  </div>
-
-  <div class="week-summary">
-    <div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">29 km</div></div>
-    <div style="text-align:right"><div class="summary-label">TRÉNINKY</div><div class="summary-val">2</div></div>
-    <div style="text-align:right"><div class="summary-label">INTENZIVNÍ</div><div class="summary-val red">1</div></div>
-  </div>
+<div class="week-meta">
+<div class="week-dates">Tento víkend · So 2.5. – Ne 3.5.</div>
+<div class="week-note">Dnes jsi odběhal intervaly – zítra jen odpočinek ✅</div>
+</div>
+<div class="day type-done">
+<button class="day-header open" onclick="toggleDay(this)">
+<span class="day-date">So 2.5.</span><span class="day-tag">✅ HOTOVO</span>
+<span class="day-total">Intervaly splněny</span><span class="day-arrow">▲</span>
+</button>
+<div class="day-body open">
+<div class="step"><span class="step-icon">✅</span><div class="step-info"><div class="step-name">Intervaly – splněno!</div><div class="step-detail">Max HR 204, nejlepší tempo 3:56/km – výborný výkon. Tempo v intervalech bylo moc vysoké, ale viděli jsme že rychlost máš. Od příštích intervalů jedeme 4:45/km cíleně.</div></div></div>
+</div>
+</div>
+<div class="day type-rest">
+<button class="day-header" onclick="return false;">
+<span class="day-date">Ne 3.5.</span><span class="day-tag">VOLNO</span>
+<span class="day-total">Odpočinek – žádný běh</span>
+</button>
+</div>
 </div>
 
-<!-- TÝDEN 2 -->
+<!-- TÝDEN 1: 4–10.5. -->
 <div class="week-container" id="week-1">
-  <div class="week-meta">
-    <div class="week-dates">Týden 2 · 5.5. – 11.5.</div>
-    <div class="week-note">První plný týden – klíčové je dodržet tempa, ne je překonat</div>
-  </div>
-
-  <div class="day type-intervals">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Po 5.5.</span>
-      <span class="day-tag">INTERVALY</span>
-      <span class="day-total">~7.5 km | ~50 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km lehký klus @ 6:30/km</div></div><span class="step-dur">~12 min</span></div>
-      <div class="step"><span class="step-icon">🤸</span><div class="step-info"><div class="step-name">Dynamický strečink</div><div class="step-detail">5 min</div></div><span class="step-dur">5 min</span></div>
-      <div class="step"><span class="step-icon">⚡</span><div class="step-info"><div class="step-name">8× 400 m INTERVAL</div><div class="step-detail">Tempo 4:10/km — po každém 90 s chůze</div></div><span class="step-dur">~24 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Interval: 8× [400m @ 4:10/km + 90s recovery]</div></div>
-    </div>
-  </div>
-
-  <div class="day type-easy">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Út 6.5.</span>
-      <span class="day-tag">LEHKÝ KLUS</span>
-      <span class="day-total">5 km | ~33 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:20–6:40/km — regenerace, opravdu lehce</div></div><span class="step-dur">~33 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Strečink</div><div class="step-detail">10 min statický</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
-    </div>
-  </div>
-
-  <div class="day type-tempo">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">St 7.5.</span>
-      <span class="day-tag">TEMPO BĚH</span>
-      <span class="day-total">~7 km | ~40 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
-      <div class="step"><span class="step-icon">🔥</span><div class="step-info"><div class="step-name">TEMPO 4 km</div><div class="step-detail">@ 4:35/km — nepříjemné ale zvládnutelné, nesmíš mluvit ve větách</div></div><span class="step-dur">~18 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 4 000 m @ 4:25–4:45/km</div></div>
-    </div>
-  </div>
-
-  <div class="day type-rest">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Čt 8.5.</span>
-      <span class="day-tag">VOLNO / POSILOVNA</span>
-      <span class="day-total">Žádný běh</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">💪</span><div class="step-info"><div class="step-name">Posilovna</div><div class="step-detail">Kliky 4×20, shyby 4×6-8, dřepy 4×20, plank 4×45s</div></div><span class="step-dur">45 min</span></div>
-    </div>
-  </div>
-
-  <div class="day type-easy">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Pá 9.5.</span>
-      <span class="day-tag">LEHKÝ KLUS</span>
-      <span class="day-total">5 km | ~33 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:20–6:40/km</div></div><span class="step-dur">~33 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
-    </div>
-  </div>
-
-  <div class="day type-long">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">So 10.5.</span>
-      <span class="day-tag">DLOUHÝ VÝBĚH</span>
-      <span class="day-total">~13 km | ~85 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🚶</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">1 km chůze</div></div><span class="step-dur">10 min</span></div>
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Výběh</div><div class="step-detail">11 km @ 6:00/km</div></div><span class="step-dur">~66 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 11 000 m @ 5:50–6:10/km</div></div>
-    </div>
-  </div>
-
-  <div class="week-summary">
-    <div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">41 km</div></div>
-    <div style="text-align:right"><div class="summary-label">TRÉNINKY</div><div class="summary-val">5</div></div>
-    <div style="text-align:right"><div class="summary-label">INTENZIVNÍ</div><div class="summary-val red">2</div></div>
-  </div>
+<div class="week-meta">
+<div class="week-dates">Týden 1 · Po 4.5. – Ne 10.5. · ~30 km</div>
+<div class="week-note">Bez intervalů – tělo vstřebá sobotní zátěž. Klus, tempo, dlouhý výběh.</div>
 </div>
 
-<!-- TÝDEN 3 -->
+<div class="day type-easy">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Po 4.5.</span><span class="day-tag">LEHKÝ KLUS</span>
+<span class="day-total">5 km | ~33 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:20–6:40/km — regenerace po sobotních intervalech. Pokud bolí nohy, zkrať na 3–4 km.</div></div><span class="step-dur">~33 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Strečink</div><div class="step-detail">10 min statický – lýtka, hamstringy, kyčle</div></div><span class="step-dur">10 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km · HR zóna 2</div></div>
+</div>
+</div>
+
+<div class="day type-rest">
+<button class="day-header" onclick="return false;">
+<span class="day-date">Út 5.5.</span><span class="day-tag">POSILOVNA</span>
+<span class="day-total">Kliky 4×20 · shyby 4×6 · dřepy 4×20 · plank 4×45s</span>
+</button>
+</div>
+
+<div class="day type-tempo">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">St 6.5.</span><span class="day-tag">TEMPO BĚH</span>
+<span class="day-total">~7 km | ~42 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
+<div class="step"><span class="step-icon">🔥</span><div class="step-info"><div class="step-name">TEMPO 4 km</div><div class="step-detail">@ 5:15/km — nepříjemné ale zvládnutelné. Nesmíš mluvit normálně, ale nejsi na hraně. Toto je laktátový práh.</div></div><span class="step-dur">~21 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km lehký klus + strečink</div></div><span class="step-dur">10 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 4 000 m @ 5:05–5:25/km</div></div>
+</div>
+</div>
+
+<div class="day type-easy">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Čt 7.5.</span><span class="day-tag">LEHKÝ KLUS</span>
+<span class="day-total">5 km | ~33 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:20–6:40/km — regenerace po tempu</div></div><span class="step-dur">~33 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
+</div>
+</div>
+
+<div class="day type-rest">
+<button class="day-header" onclick="return false;">
+<span class="day-date">Pá 8.5.</span><span class="day-tag">VOLNO</span>
+<span class="day-total">Odpočinek před dlouhým výběhem</span>
+</button>
+</div>
+
+<div class="day type-long">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">So 9.5.</span><span class="day-tag">DLOUHÝ VÝBĚH</span>
+<span class="day-total">~13 km | ~82 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🚶</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">1 km chůze</div></div><span class="step-dur">10 min</span></div>
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Dlouhý výběh</div><div class="step-detail">11 km @ 6:00–6:20/km — konverzační tempo celou dobu. Musíš být schopen normálně mluvit. Pokud ne, zpomal.</div></div><span class="step-dur">~68 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km chůze + strečink 10 min</div></div><span class="step-dur">15 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 11 000 m @ 5:55–6:20/km</div></div>
+</div>
+</div>
+
+<div class="day type-rest">
+<button class="day-header" onclick="return false;">
+<span class="day-date">Ne 10.5.</span><span class="day-tag">VOLNO</span>
+<span class="day-total">Aktivní odpočinek – procházka, strečink</span>
+</button>
+</div>
+
+<div class="week-summary">
+<div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">~30 km</div></div>
+<div style="text-align:right"><div class="summary-label">TRÉNINKY</div><div class="summary-val">4</div></div>
+<div style="text-align:right"><div class="summary-label">INTENZIVNÍ</div><div class="summary-val red">1</div></div>
+</div>
+</div>
+
+<!-- TÝDEN 2: 11–17.5. -->
 <div class="week-container" id="week-2">
-  <div class="week-meta">
-    <div class="week-dates">Týden 3 · 12.5. – 18.5.</div>
-    <div class="week-note">Intervaly přidáváme 2 opakování navíc — sleduj jak reaguješ</div>
-  </div>
-
-  <div class="day type-intervals">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Po 12.5.</span>
-      <span class="day-tag">INTERVALY +2</span>
-      <span class="day-total">~8.5 km | ~57 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km lehký klus @ 6:30/km</div></div><span class="step-dur">~12 min</span></div>
-      <div class="step"><span class="step-icon">🤸</span><div class="step-info"><div class="step-name">Dynamický strečink</div><div class="step-detail">5 min</div></div><span class="step-dur">5 min</span></div>
-      <div class="step"><span class="step-icon">⚡</span><div class="step-info"><div class="step-name">10× 400 m INTERVAL</div><div class="step-detail">Tempo 4:10/km — po každém 90 s chůze. 2 navíc oproti týdnu 2!</div></div><span class="step-dur">~30 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Interval: 10× [400m @ 4:10/km + 90s recovery]</div></div>
-    </div>
-  </div>
-
-  <div class="day type-easy">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Út 13.5.</span>
-      <span class="day-tag">LEHKÝ KLUS</span>
-      <span class="day-total">5 km | ~33 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:20–6:40/km</div></div><span class="step-dur">~33 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
-    </div>
-  </div>
-
-  <div class="day type-tempo">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">St 14.5.</span>
-      <span class="day-tag">TEMPO BĚH</span>
-      <span class="day-total">~7 km | ~40 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
-      <div class="step"><span class="step-icon">🔥</span><div class="step-info"><div class="step-name">TEMPO 4 km</div><div class="step-detail">@ 4:30/km — o 5 sekund rychleji než minulý týden</div></div><span class="step-dur">~18 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 4 000 m @ 4:20–4:40/km</div></div>
-    </div>
-  </div>
-
-  <div class="day type-rest">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Čt 15.5.</span>
-      <span class="day-tag">VOLNO / POSILOVNA</span>
-      <span class="day-total">Žádný běh</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">💪</span><div class="step-info"><div class="step-name">Posilovna</div><div class="step-detail">Kliky 4×25, shyby 4×8, dřepy 4×25, plank 4×60s</div></div><span class="step-dur">45 min</span></div>
-    </div>
-  </div>
-
-  <div class="day type-easy">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Pá 16.5.</span>
-      <span class="day-tag">LEHKÝ KLUS</span>
-      <span class="day-total">6 km | ~38 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">6 km @ 6:20–6:40/km</div></div><span class="step-dur">~38 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 6 000 m @ 6:30/km</div></div>
-    </div>
-  </div>
-
-  <div class="day type-long">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">So 17.5.</span>
-      <span class="day-tag">DLOUHÝ VÝBĚH</span>
-      <span class="day-total">~15 km | ~97 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🚶</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">1 km chůze</div></div><span class="step-dur">10 min</span></div>
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Výběh</div><div class="step-detail">13 km @ 6:00/km — o 2 km více než minulý týden</div></div><span class="step-dur">~78 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 13 000 m @ 5:50–6:10/km</div></div>
-    </div>
-  </div>
-
-  <div class="week-summary">
-    <div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">44 km</div></div>
-    <div style="text-align:right"><div class="summary-label">TRÉNINKY</div><div class="summary-val">5</div></div>
-    <div style="text-align:right"><div class="summary-label">INTENZIVNÍ</div><div class="summary-val red">2</div></div>
-  </div>
+<div class="week-meta">
+<div class="week-dates">Týden 2 · Po 11.5. – Ne 17.5. · ~41 km</div>
+<div class="week-note">Intervaly se vrací – ale správným tempem 4:45/km. Žádné hrdinství!</div>
 </div>
 
-<!-- TÝDEN 4 -->
+<div class="day type-intervals">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Po 11.5.</span><span class="day-tag">INTERVALY</span>
+<span class="day-total">~7.5 km | ~52 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km + dynamický strečink 5 min</div></div><span class="step-dur">~17 min</span></div>
+<div class="step"><span class="step-icon">⚡</span><div class="step-info"><div class="step-name">8× 400 m INTERVAL</div><div class="step-detail">Tempo 4:45/km — po každém 90 sekund chůze. Každé opakování stejné tempo. Pokud v 6. kole jsi pod 5:00/km, zastav – raději méně opakování ve správném tempu.</div></div><span class="step-dur">~26 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km lehký klus + strečink</div></div><span class="step-dur">10 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Interval: 8× [400m @ 4:35–4:55/km + 90s recovery chůze]</div></div>
+</div>
+</div>
+
+<div class="day type-easy">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Út 12.5.</span><span class="day-tag">LEHKÝ KLUS</span>
+<span class="day-total">5 km | ~33 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:20–6:40/km — regenerace po intervalech, opravdu pomalu</div></div><span class="step-dur">~33 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
+</div>
+</div>
+
+<div class="day type-rest">
+<button class="day-header" onclick="return false;">
+<span class="day-date">St 13.5.</span><span class="day-tag">POSILOVNA</span>
+<span class="day-total">Kliky 4×25 · shyby 4×8 · dřepy 4×25 · plank 4×60s</span>
+</button>
+</div>
+
+<div class="day type-tempo">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Čt 14.5.</span><span class="day-tag">TEMPO BĚH</span>
+<span class="day-total">~7 km | ~42 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
+<div class="step"><span class="step-icon">🔥</span><div class="step-info"><div class="step-name">TEMPO 4 km</div><div class="step-detail">@ 5:15/km — stejné jako minulý týden. Cíl je zvládnout ho lépe a klidněji, ne rychleji.</div></div><span class="step-dur">~21 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 4 000 m @ 5:05–5:25/km</div></div>
+</div>
+</div>
+
+<div class="day type-easy">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Pá 15.5.</span><span class="day-tag">LEHKÝ KLUS</span>
+<span class="day-total">6 km | ~38 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">6 km @ 6:20–6:40/km</div></div><span class="step-dur">~38 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 6 000 m @ 6:30/km</div></div>
+</div>
+</div>
+
+<div class="day type-long">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">So 16.5.</span><span class="day-tag">DLOUHÝ VÝBĚH</span>
+<span class="day-total">~15 km | ~93 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🚶</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">1 km chůze</div></div><span class="step-dur">10 min</span></div>
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Dlouhý výběh</div><div class="step-detail">13 km @ 6:00–6:20/km — o 2 km více než minulý týden. Stále konverzační tempo.</div></div><span class="step-dur">~80 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km chůze + strečink</div></div><span class="step-dur">15 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 13 000 m @ 5:55–6:20/km</div></div>
+</div>
+</div>
+
+<div class="day type-rest">
+<button class="day-header" onclick="return false;">
+<span class="day-date">Ne 17.5.</span><span class="day-tag">VOLNO</span>
+<span class="day-total">Aktivní odpočinek</span>
+</button>
+</div>
+
+<div class="week-summary">
+<div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">~41 km</div></div>
+<div style="text-align:right"><div class="summary-label">TRÉNINKY</div><div class="summary-val">5</div></div>
+<div style="text-align:right"><div class="summary-label">INTENZIVNÍ</div><div class="summary-val red">2</div></div>
+</div>
+</div>
+
+<!-- TÝDEN 3: 18–24.5. -->
 <div class="week-container" id="week-3">
-  <div class="week-meta">
-    <div class="week-dates">Týden 4 · 19.5. – 25.5.</div>
-    <div class="week-note">Regenerační týden — objem dolů o 20%, tělo si odpočine a přijme trénink</div>
-  </div>
-
-  <div class="day type-intervals">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Po 19.5.</span>
-      <span class="day-tag">INTERVALY (lehčí)</span>
-      <span class="day-total">~6 km | ~40 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~12 min</span></div>
-      <div class="step"><span class="step-icon">⚡</span><div class="step-info"><div class="step-name">6× 400 m INTERVAL</div><div class="step-detail">Tempo 4:10/km — méně opakování, regenerační týden</div></div><span class="step-dur">~18 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Interval: 6× [400m @ 4:10/km + 90s recovery]</div></div>
-    </div>
-  </div>
-
-  <div class="day type-easy">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Út 20.5.</span>
-      <span class="day-tag">LEHKÝ KLUS</span>
-      <span class="day-total">5 km | ~33 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:30/km — opravdu pohodlně</div></div><span class="step-dur">~33 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
-    </div>
-  </div>
-
-  <div class="day type-tempo">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">St 21.5.</span>
-      <span class="day-tag">TEMPO BĚH</span>
-      <span class="day-total">~6 km | ~36 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
-      <div class="step"><span class="step-icon">🔥</span><div class="step-info"><div class="step-name">TEMPO 3 km</div><div class="step-detail">@ 4:30/km — kratší než obvykle, regenerační týden</div></div><span class="step-dur">~14 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 3 000 m @ 4:20–4:40/km</div></div>
-    </div>
-  </div>
-
-  <div class="day type-rest">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Čt 22.5.</span>
-      <span class="day-tag">VOLNO</span>
-      <span class="day-total">Žádný běh</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">😴</span><div class="step-info"><div class="step-name">Volno</div><div class="step-detail">Aktivní odpočinek — procházka, protažení, spánek</div></div><span class="step-dur">—</span></div>
-    </div>
-  </div>
-
-  <div class="day type-long">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">So 24.5.</span>
-      <span class="day-tag">STŘEDNĚ DLOUHÝ</span>
-      <span class="day-total">~12 km | ~78 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🚶</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">1 km chůze</div></div><span class="step-dur">10 min</span></div>
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Výběh</div><div class="step-detail">10 km @ 6:00/km — kratší, regenerační týden</div></div><span class="step-dur">~60 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 10 000 m @ 5:50–6:10/km</div></div>
-    </div>
-  </div>
-
-  <div class="week-summary">
-    <div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">34 km</div></div>
-    <div style="text-align:right"><div class="summary-label">TRÉNINKY</div><div class="summary-val">4</div></div>
-    <div style="text-align:right"><div class="summary-label">INTENZIVNÍ</div><div class="summary-val red">2</div></div>
-  </div>
+<div class="week-meta">
+<div class="week-dates">Týden 3 · Po 18.5. – Ne 24.5. · ~45 km</div>
+<div class="week-note">Nejtěžší týden – +2 intervaly, tempo prodlouženo na 5 km</div>
 </div>
 
-<!-- TÝDEN 5 -->
+<div class="day type-intervals">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Po 18.5.</span><span class="day-tag">INTERVALY +2</span>
+<span class="day-total">~8.5 km | ~58 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km + dynamický strečink</div></div><span class="step-dur">~17 min</span></div>
+<div class="step"><span class="step-icon">⚡</span><div class="step-info"><div class="step-name">10× 400 m INTERVAL</div><div class="step-detail">Tempo 4:45/km — 2 opakování více než minulý týden. Poslední 2 budou bolet, to je správně. Pauza 90s nezkracovat!</div></div><span class="step-dur">~30 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Interval: 10× [400m @ 4:35–4:55/km + 90s recovery]</div></div>
+</div>
+</div>
+
+<div class="day type-easy">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Út 19.5.</span><span class="day-tag">LEHKÝ KLUS</span>
+<span class="day-total">5 km | ~33 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:20–6:40/km</div></div><span class="step-dur">~33 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
+</div>
+</div>
+
+<div class="day type-rest">
+<button class="day-header" onclick="return false;">
+<span class="day-date">St 20.5.</span><span class="day-tag">POSILOVNA</span>
+<span class="day-total">Kliky 4×30 · shyby 4×10 · dřepy 4×30 · plank 4×60s</span>
+</button>
+</div>
+
+<div class="day type-tempo">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Čt 21.5.</span><span class="day-tag">TEMPO 5 KM</span>
+<span class="day-total">~9 km | ~50 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
+<div class="step"><span class="step-icon">🔥</span><div class="step-info"><div class="step-name">TEMPO 5 km</div><div class="step-detail">@ 5:10/km — o 1 km delší a o 5 vteřin rychlejší. Toto je závodní příprava. Pokud nestíháš tempo, drž 5:15/km – to stačí.</div></div><span class="step-dur">~26 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 5:00–5:20/km</div></div>
+</div>
+</div>
+
+<div class="day type-easy">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Pá 22.5.</span><span class="day-tag">LEHKÝ KLUS</span>
+<span class="day-total">6 km | ~38 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">6 km @ 6:20–6:40/km</div></div><span class="step-dur">~38 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 6 000 m @ 6:30/km</div></div>
+</div>
+</div>
+
+<div class="day type-long">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">So 23.5.</span><span class="day-tag">DLOUHÝ VÝBĚH</span>
+<span class="day-total">~15 km | ~93 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🚶</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">1 km chůze</div></div><span class="step-dur">10 min</span></div>
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Dlouhý výběh</div><div class="step-detail">13 km @ 6:00–6:20/km — nohy budou unavené po těžkém týdnu. Neboj se zpomalit na 6:30/km, důležité je doběhnout.</div></div><span class="step-dur">~80 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km chůze + strečink</div></div><span class="step-dur">15 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 13 000 m @ 5:55–6:20/km</div></div>
+</div>
+</div>
+
+<div class="day type-rest">
+<button class="day-header" onclick="return false;">
+<span class="day-date">Ne 24.5.</span><span class="day-tag">VOLNO</span>
+<span class="day-total">Zasloužený odpočinek</span>
+</button>
+</div>
+
+<div class="week-summary">
+<div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">~45 km</div></div>
+<div style="text-align:right"><div class="summary-label">TRÉNINKY</div><div class="summary-val">5</div></div>
+<div style="text-align:right"><div class="summary-label">INTENZIVNÍ</div><div class="summary-val red">2</div></div>
+</div>
+</div>
+
+<!-- TÝDEN 4 + COOPER: 25–30.5. -->
 <div class="week-container" id="week-4">
-  <div class="week-meta">
-    <div class="week-dates">Týden 5 · 26.5. – 31.5.</div>
-    <div class="week-note">🏁 Konec měsíce = COOPER TEST. Změříme posun od 1. května!</div>
-  </div>
-
-  <div class="day type-intervals">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Po 26.5.</span>
-      <span class="day-tag">INTERVALY</span>
-      <span class="day-total">~8.5 km | ~52 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~12 min</span></div>
-      <div class="step"><span class="step-icon">⚡</span><div class="step-info"><div class="step-name">10× 400 m INTERVAL</div><div class="step-detail">Tempo 4:10/km — poslední intervalový trénink před Cooperem</div></div><span class="step-dur">~30 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Interval: 10× [400m @ 4:10/km + 90s recovery]</div></div>
-    </div>
-  </div>
-
-  <div class="day type-easy">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Út 27.5.</span>
-      <span class="day-tag">LEHKÝ KLUS</span>
-      <span class="day-total">5 km | ~33 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:30/km</div></div><span class="step-dur">~33 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
-    </div>
-  </div>
-
-  <div class="day type-rest">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">St 28.5.</span>
-      <span class="day-tag">VOLNO</span>
-      <span class="day-total">Žádný běh</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">😴</span><div class="step-info"><div class="step-name">Odpočinek</div><div class="step-detail">Před Cooperem musíš být čerstvý — žádný běh!</div></div><span class="step-dur">—</span></div>
-    </div>
-  </div>
-
-  <div class="day type-rest">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Čt 29.5.</span>
-      <span class="day-tag">VOLNO</span>
-      <span class="day-total">Žádný běh</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">😴</span><div class="step-info"><div class="step-name">Odpočinek</div><div class="step-detail">Stále odpočíváš — možná lehké protažení</div></div><span class="step-dur">—</span></div>
-    </div>
-  </div>
-
-  <div class="day type-cooper">
-    <button class="day-header" onclick="toggleDay(this)">
-      <span class="day-date">Pá 30.5.</span>
-      <span class="day-tag">🏁 COOPER TEST</span>
-      <span class="day-total">Cíl: 2600+ m za 12 min</span>
-      <span class="day-arrow">▼</span>
-    </button>
-    <div class="day-body">
-      <div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">10 min lehký klus + dynamický strečink</div></div><span class="step-dur">15 min</span></div>
-      <div class="step"><span class="step-icon">🏁</span><div class="step-info"><div class="step-name">COOPER TEST</div><div class="step-detail">12 minut — ABSOLUTNÍ MAXIMUM. Cíl: 2600+ m (o 100 m více než začátek května)</div></div><span class="step-dur">12 min</span></div>
-      <div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">10 min chůze</div></div><span class="step-dur">10 min</span></div>
-      <div class="garmin-box"><div class="garmin-label">GARMIN CONNECT – NASTAVENÍ</div><div class="garmin-text">→ Interval: 1× [12 min @ maximum effort]</div></div>
-    </div>
-  </div>
-
-  <div class="week-summary">
-    <div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">22 km</div></div>
-    <div style="text-align:right"><div class="summary-label">TRÉNINKY</div><div class="summary-val">3</div></div>
-    <div style="text-align:right"><div class="summary-label">INTENZIVNÍ</div><div class="summary-val red">2</div></div>
-  </div>
+<div class="week-meta">
+<div class="week-dates">Týden 4 + Cooper · Po 25.5. – So 30.5.</div>
+<div class="week-note">Regenerační týden → Cooper v sobotu. Méně objemu, zachovat intenzitu.</div>
 </div>
 
-<!-- Legend -->
+<div class="day type-intervals">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Po 25.5.</span><span class="day-tag">INTERVALY LEHČÍ</span>
+<span class="day-total">~6 km | ~42 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
+<div class="step"><span class="step-icon">⚡</span><div class="step-info"><div class="step-name">6× 400 m INTERVAL</div><div class="step-detail">Tempo 4:40/km — méně opakování, mírně rychlejší. Regenerační = méně, ne pomaleji. Tělo se chystá na Cooper.</div></div><span class="step-dur">~18 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Interval: 6× [400m @ 4:30–4:50/km + 90s recovery]</div></div>
+</div>
+</div>
+
+<div class="day type-easy">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">Út 26.5.</span><span class="day-tag">LEHKÝ KLUS</span>
+<span class="day-total">5 km | ~33 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:30/km — poslední delší běh před Cooperem</div></div><span class="step-dur">~33 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
+</div>
+</div>
+
+<div class="day type-tempo">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">St 27.5.</span><span class="day-tag">KRÁTKÉ TEMPO</span>
+<span class="day-total">~6 km | ~35 min</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
+<div class="step"><span class="step-icon">🔥</span><div class="step-info"><div class="step-name">TEMPO 3 km</div><div class="step-detail">@ 5:05/km — kratší než obvykle, udržuje formu bez přetížení. Poslední tvrdý trénink před Cooperem.</div></div><span class="step-dur">~15 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 3 000 m @ 4:55–5:15/km</div></div>
+</div>
+</div>
+
+<div class="day type-rest">
+<button class="day-header" onclick="return false;">
+<span class="day-date">Čt 28.5.</span><span class="day-tag">VOLNO</span>
+<span class="day-total">Odpočinek – žádný běh!</span>
+</button>
+</div>
+
+<div class="day type-rest">
+<button class="day-header" onclick="return false;">
+<span class="day-date">Pá 29.5.</span><span class="day-tag">VOLNO</span>
+<span class="day-total">Odpočinek – žádný běh! Spi hodně.</span>
+</button>
+</div>
+
+<div class="day type-cooper">
+<button class="day-header" onclick="toggleDay(this)">
+<span class="day-date">So 30.5.</span><span class="day-tag">🏁 COOPER TEST</span>
+<span class="day-total">Cíl: 2600+ m za 12 minut</span><span class="day-arrow">▼</span>
+</button>
+<div class="day-body">
+<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">10 min lehký klus @ 6:30/km + dynamický strečink 5 min. Musíš být pořádně rozcvičený.</div></div><span class="step-dur">15 min</span></div>
+<div class="step"><span class="step-icon">🏁</span><div class="step-info"><div class="step-name">COOPER TEST – 12 minut MAXIMUM</div><div class="step-detail">Absolutní maximum. Začni tempem ~4:50/km – pokud je lehce, přidej. Poslední 3 minuty dej úplně vše. Cíl 2600 m = 217 m/min = tempo 4:37/km.</div></div><span class="step-dur">12 min</span></div>
+<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">10 min pomalá chůze – nezastavuj ihned po doběhnutí!</div></div><span class="step-dur">10 min</span></div>
+<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Interval: [10min warmup] + [12min @ Max Effort – bez cílového tempa] + [10min cooldown]</div></div>
+</div>
+</div>
+
+<div class="week-summary">
+<div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">~20 km</div></div>
+<div style="text-align:right"><div class="summary-label">ZÁMĚRNĚ MÉNĚ</div><div class="summary-val">✓</div></div>
+<div style="text-align:right"><div class="summary-label">COOPER CÍL</div><div class="summary-val red">2600 m</div></div>
+</div>
+</div>
+
 <div class="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:#FF4B4B"></div><span class="legend-text">Intervaly</span></div>
-  <div class="legend-item"><div class="legend-dot" style="background:#FFB84B"></div><span class="legend-text">Tempo</span></div>
-  <div class="legend-item"><div class="legend-dot" style="background:#4BFF9E"></div><span class="legend-text">Lehký klus</span></div>
-  <div class="legend-item"><div class="legend-dot" style="background:#4B9EFF"></div><span class="legend-text">Dlouhý výběh</span></div>
-  <div class="legend-item"><div class="legend-dot" style="background:#C84BFF"></div><span class="legend-text">Cooper test</span></div>
-  <div class="legend-item"><div class="legend-dot" style="background:#888"></div><span class="legend-text">Volno</span></div>
+<div class="legend-item"><div class="legend-dot" style="background:#FF4B4B"></div><span class="legend-text">Intervaly</span></div>
+<div class="legend-item"><div class="legend-dot" style="background:#FFB84B"></div><span class="legend-text">Tempo</span></div>
+<div class="legend-item"><div class="legend-dot" style="background:#4BFF9E"></div><span class="legend-text">Lehký klus</span></div>
+<div class="legend-item"><div class="legend-dot" style="background:#4B9EFF"></div><span class="legend-text">Dlouhý výběh</span></div>
+<div class="legend-item"><div class="legend-dot" style="background:#C84BFF"></div><span class="legend-text">Cooper test</span></div>
+<div class="legend-item"><div class="legend-dot" style="background:#888"></div><span class="legend-text">Volno</span></div>
 </div>
 
 <script>
-  function showWeek(index) {
-    document.querySelectorAll('.week-container').forEach((el, i) => {
-      el.classList.toggle('active', i === index);
-    });
-    document.querySelectorAll('.pill').forEach((el, i) => {
-      el.classList.toggle('active', i === index);
-    });
-  }
-
-  function toggleDay(btn) {
-    const body = btn.nextElementSibling;
-    const arrow = btn.querySelector('.day-arrow');
-    const isOpen = body.classList.contains('open');
-    body.classList.toggle('open', !isOpen);
-    btn.classList.toggle('open', !isOpen);
-    arrow.textContent = isOpen ? '▼' : '▲';
-  }
+function showWeek(i) {
+document.querySelectorAll('.week-container').forEach((el,j) => el.classList.toggle('active', i===j));
+document.querySelectorAll('.pill').forEach((el,j) => el.classList.toggle('active', i===j));
+}
+function toggleDay(btn) {
+if (btn.closest('.type-rest')) return;
+const body = btn.nextElementSibling;
+const arrow = btn.querySelector('.day-arrow');
+if (!body || !arrow) return;
+const open = body.classList.contains('open');
+body.classList.toggle('open', !open);
+btn.classList.toggle('open', !open);
+arrow.textContent = open ? '▼' : '▲';
+}
 </script>
 </body>
 </html>
