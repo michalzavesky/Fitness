@@ -1,495 +1,407 @@
 <!DOCTYPE html>
+
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Květen 2026 – Příprava na výběrko ZJ Teplice </title>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { min-height: 100vh; background: #0a0a0f; color: #e8e8f0; font-family: 'Courier New', monospace; padding: 24px 16px; }
-.header { text-align: center; margin-bottom: 32px; }
-.header-sub { font-size: 11px; letter-spacing: 6px; color: #666; margin-bottom: 8px; text-transform: uppercase; }
-.header h1 { font-size: 32px; font-weight: 900; letter-spacing: -1px; background: linear-gradient(135deg, #FF4B4B, #C84BFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.header-desc { font-size: 13px; color: #888; margin-top: 8px; }
-.header-desc span { color: #C84BFF; font-weight: 700; }
-.pace-box { max-width: 680px; margin: 0 auto 28px; background: rgba(255,255,255,0.03); border: 1px solid #1e1e2e; border-radius: 12px; padding: 16px 18px; }
-.pace-box-title { font-size: 10px; letter-spacing: 3px; color: #555; text-transform: uppercase; margin-bottom: 12px; }
-.pace-grid { display: flex; gap: 8px; flex-wrap: wrap; }
-.pace-item { padding: 8px 12px; border-radius: 8px; border: 1px solid; flex: 1; min-width: 130px; }
-.p-label { font-size: 10px; letter-spacing: 1px; margin-bottom: 4px; }
-.p-val { font-size: 15px; font-weight: 700; color: #e8e8f0; }
-.week-pills { display: flex; gap: 8px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
-.pill { padding: 6px 14px; border-radius: 20px; border: 1px solid #333; background: transparent; color: #888; cursor: pointer; font-size: 12px; font-family: inherit; transition: all 0.2s; }
-.pill.active { border-color: #FF4B4B; background: rgba(255,75,75,0.15); color: #FF4B4B; }
-.week-container { max-width: 680px; margin: 0 auto; display: none; }
-.week-container.active { display: block; }
-.week-meta { margin-bottom: 16px; }
-.week-dates { font-size: 11px; color: #666; letter-spacing: 3px; text-transform: uppercase; }
-.week-note { font-size: 13px; color: #aaa; margin-top: 4px; }
-.day { margin-bottom: 8px; }
-.day-header { width: 100%; text-align: left; padding: 14px 18px; border-radius: 12px; border: 1px solid #222; background: rgba(255,255,255,0.03); cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 12px; }
-.day-header.open { border-radius: 12px 12px 0 0; }
-.day-date { font-size: 12px; color: #555; min-width: 78px; }
-.day-tag { font-size: 10px; letter-spacing: 2px; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid; white-space: nowrap; }
-.day-total { font-size: 13px; color: #aaa; flex: 1; }
-.day-arrow { color: #555; font-size: 14px; margin-left: auto; flex-shrink: 0; }
-.day-body { border: 1px solid; border-top: none; border-radius: 0 0 12px 12px; background: rgba(0,0,0,0.4); padding: 16px 18px; display: none; }
-.day-body.open { display: block; }
-.step { display: flex; gap: 12px; padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid #1a1a2e; }
-.step:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-.step-icon { font-size: 20px; min-width: 28px; }
-.step-info { flex: 1; }
-.step-name { font-size: 13px; font-weight: 700; color: #e8e8f0; margin-bottom: 2px; }
-.step-detail { font-size: 12px; color: #aaa; line-height: 1.5; }
-.step-dur { font-size: 11px; color: #555; white-space: nowrap; padding-top: 2px; }
-.garmin-box { margin-top: 16px; padding: 10px 14px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px dashed #333; }
-.garmin-label { font-size: 10px; color: #555; letter-spacing: 2px; margin-bottom: 4px; }
-.garmin-text { font-size: 12px; color: #888; }
-.week-summary { margin-top: 16px; padding: 14px 18px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid #1e1e2e; display: flex; justify-content: space-between; align-items: center; }
-.summary-label { font-size: 10px; color: #555; letter-spacing: 2px; margin-bottom: 4px; }
-.summary-val { font-size: 22px; font-weight: 900; color: #e8e8f0; }
-.summary-val.red { color: #FF4B4B; }
-.legend { max-width: 680px; margin: 24px auto 0; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-.legend-item { display: flex; align-items: center; gap: 6px; }
-.legend-dot { width: 8px; height: 8px; border-radius: 2px; }
-.legend-text { font-size: 11px; color: #666; }
-.type-done .day-header { border-color: rgba(75,255,158,0.3); background: rgba(75,255,158,0.04); }
-.type-done .day-tag { color: #4BFF9E; border-color: #4BFF9E; }
-.type-done .day-body { border-color: #4BFF9E; }
-.type-done .day-date { color: #4BFF9E; }
-.type-intervals .day-header.open,.type-intervals .day-header:hover { border-color: #FF4B4B; background: rgba(255,75,75,0.12); }
-.type-intervals .day-tag { color: #FF4B4B; border-color: #FF4B4B; }
-.type-intervals .day-body { border-color: #FF4B4B; }
-.type-tempo .day-header.open,.type-tempo .day-header:hover { border-color: #FFB84B; background: rgba(255,184,75,0.12); }
-.type-tempo .day-tag { color: #FFB84B; border-color: #FFB84B; }
-.type-tempo .day-body { border-color: #FFB84B; }
-.type-easy .day-header.open,.type-easy .day-header:hover { border-color: #4BFF9E; background: rgba(75,255,158,0.1); }
-.type-easy .day-tag { color: #4BFF9E; border-color: #4BFF9E; }
-.type-easy .day-body { border-color: #4BFF9E; }
-.type-long .day-header.open,.type-long .day-header:hover { border-color: #4B9EFF; background: rgba(75,158,255,0.12); }
-.type-long .day-tag { color: #4B9EFF; border-color: #4B9EFF; }
-.type-long .day-body { border-color: #4B9EFF; }
-.type-rest .day-header { cursor: default; }
-.type-rest .day-tag { color: #888; border-color: #555; }
-.type-cooper .day-header.open,.type-cooper .day-header:hover { border-color: #C84BFF; background: rgba(200,75,255,0.15); }
-.type-cooper .day-tag { color: #C84BFF; border-color: #C84BFF; }
-.type-cooper .day-body { border-color: #C84BFF; }
-</style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fyzická způsobilost</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+```
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: linear-gradient(135deg, #0a0e18 0%, #111827 100%);
+  min-height: 100vh;
+  color: #dde1ea;
+  padding: 1.5rem 1rem;
+}
+
+.container { max-width: 680px; margin: 0 auto; }
+
+.nadpis {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.nadpis h1 {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-shadow: 0 2px 20px rgba(74,144,226,0.4);
+}
+.nadpis p {
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  color: #4a90e2;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.tabulka {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.tabulka-header {
+  display: grid;
+  grid-template-columns: 1fr 110px 50px;
+  padding: 0.6rem 1rem;
+  background: rgba(74,144,226,0.12);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #4a90e2;
+  text-transform: uppercase;
+}
+.tabulka-header span:not(:first-child) { text-align: center; }
+
+.radek {
+  display: grid;
+  grid-template-columns: 1fr 110px 50px;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.2s;
+}
+.radek:last-child { border-bottom: none; }
+.radek:hover { background: rgba(255,255,255,0.03); }
+.radek.chyba { background: rgba(231,76,60,0.07); }
+
+.disc-nazev {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #eef;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.disc-vaha {
+  font-size: 0.6rem;
+  background: rgba(74,144,226,0.25);
+  color: #4a90e2;
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-weight: 700;
+}
+.disc-jednotka {
+  font-size: 0.68rem;
+  color: #666;
+  margin-top: 2px;
+}
+.disc-rozsah {
+  font-size: 0.63rem;
+  color: #444;
+  margin-top: 2px;
+}
+
+.input-wrap { display: flex; justify-content: center; }
+input[type=number] {
+  width: 90px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.95rem;
+  text-align: center;
+  transition: border-color 0.2s;
+  -moz-appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type=number]:focus { outline: none; border-color: #4a90e2; }
+input[type=number].chyba-input { border-color: rgba(231,76,60,0.5); }
+
+.odznak-wrap { display: flex; justify-content: center; }
+.odznak {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 1rem;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.odznak-prazdny { color: #555; font-size: 1rem; font-weight: 500; }
+
+.vysledek {
+  margin-top: 1.5rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.celkem-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.celkem-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: #aab;
+  text-transform: uppercase;
+}
+.celkem-sub { font-size: 0.7rem; color: #555; margin-top: 2px; }
+.celkem-cislo {
+  font-family: 'Oswald', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.celkem-max { font-size: 1.2rem; color: #555; }
+
+.discipliny-row {
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.mini-tagy { display: flex; flex-wrap: wrap; gap: 6px; }
+.mini-tag {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.68rem;
+  color: #777;
+}
+.mini-body { font-weight: 700; }
+
+.verdikt {
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  text-align: center;
+}
+.verdikt-text {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+.verdikt-sub { font-size: 0.75rem; color: #666; margin-top: 4px; }
+
+.legenda {
+  margin-top: 1rem;
+  font-size: 0.68rem;
+  color: #444;
+  text-align: center;
+  line-height: 1.8;
+}
+```
+
+  </style>
 </head>
 <body>
+<div class="container">
 
-<div class="header">
-<div class="header-sub">Příprava na výběrko ZJ · Fáze 1</div>
-<h1>KVĚTEN 2026</h1>
-<div class="header-desc">Základ rychlosti · Cooper 2.5.: 2500 m → Cíl 30.5.: <span>2600+ m</span></div>
-<div class="week-pills">
-<button class="pill active" onclick="showWeek(0)">Víkend 2–3.5.</button>
-<button class="pill" onclick="showWeek(1)">T1 · 4–10.5. · 30km</button>
-<button class="pill" onclick="showWeek(2)">T2 · 11–17.5. · 41km</button>
-<button class="pill" onclick="showWeek(3)">T3 · 18–24.5. · 45km</button>
-<button class="pill" onclick="showWeek(4)">T4+Cooper · 25–30.5.</button>
-</div>
-</div>
+  <div class="nadpis">
+    <h1>FYZICKÁ ZPŮSOBILOST</h1>
+    <p>Ověření limitů · 04/2024</p>
+  </div>
 
-<div class="pace-box">
-<div class="pace-box-title">Tvoje tréninková tempa – celý květen</div>
-<div class="pace-grid">
-<div class="pace-item" style="border-color:#4BFF9E;background:rgba(75,255,158,0.05)"><div class="p-label" style="color:#4BFF9E">LEHKÝ KLUS</div><div class="p-val">6:20–6:40/km</div></div>
-<div class="pace-item" style="border-color:#4B9EFF;background:rgba(75,158,255,0.05)"><div class="p-label" style="color:#4B9EFF">DLOUHÝ VÝBĚH</div><div class="p-val">6:00–6:20/km</div></div>
-<div class="pace-item" style="border-color:#FFB84B;background:rgba(255,184,75,0.05)"><div class="p-label" style="color:#FFB84B">TEMPO T1–T2</div><div class="p-val">5:15/km</div></div>
-<div class="pace-item" style="border-color:#FF9020;background:rgba(255,144,32,0.05)"><div class="p-label" style="color:#FF9020">TEMPO T3–T4</div><div class="p-val">5:05–5:10/km</div></div>
-<div class="pace-item" style="border-color:#FF4B4B;background:rgba(255,75,75,0.05)"><div class="p-label" style="color:#FF4B4B">INTERVALY T1–T2</div><div class="p-val">4:45/km</div></div>
-<div class="pace-item" style="border-color:#cc3333;background:rgba(200,50,50,0.05)"><div class="p-label" style="color:#cc3333">INTERVALY T3–T4</div><div class="p-val">4:40/km</div></div>
-</div>
-</div>
+  <div class="tabulka">
+    <div class="tabulka-header">
+      <span>Disciplína</span>
+      <span>Výsledek</span>
+      <span>Body</span>
+    </div>
+    <div id="radky"></div>
+  </div>
 
-<!-- VÍKEND -->
-<div class="week-container active" id="week-0">
-<div class="week-meta">
-<div class="week-dates">Tento víkend · So 2.5. – Ne 3.5.</div>
-<div class="week-note">Dnes jsi odběhal intervaly – zítra jen odpočinek ✅</div>
-</div>
-<div class="day type-done">
-<button class="day-header open" onclick="toggleDay(this)">
-<span class="day-date">So 2.5.</span><span class="day-tag">✅ HOTOVO</span>
-<span class="day-total">Intervaly splněny</span><span class="day-arrow">▲</span>
-</button>
-<div class="day-body open">
-<div class="step"><span class="step-icon">✅</span><div class="step-info"><div class="step-name">Intervaly – splněno!</div><div class="step-detail">Max HR 204, nejlepší tempo 3:56/km – výborný výkon. Tempo v intervalech bylo moc vysoké, ale viděli jsme že rychlost máš. Od příštích intervalů jedeme 4:45/km cíleně.</div></div></div>
-</div>
-</div>
-<div class="day type-rest">
-<button class="day-header" onclick="return false;">
-<span class="day-date">Ne 3.5.</span><span class="day-tag">VOLNO</span>
-<span class="day-total">Odpočinek – žádný běh</span>
-</button>
-</div>
-</div>
+  <div class="vysledek">
+    <div class="celkem-row">
+      <div>
+        <div class="celkem-label">Celkový počet bodů</div>
+        <div class="celkem-sub">Min. 50 bodů z 10 disciplín</div>
+      </div>
+      <div class="celkem-cislo" id="celkem-cislo">
+        0<span class="celkem-max">/100</span>
+      </div>
+    </div>
+    <div class="discipliny-row">
+      <span>Vyplněno disciplín</span>
+      <span id="vyplneno-pocet" style="font-weight:600">0 / 10</span>
+    </div>
+    <div class="mini-tagy" id="mini-tagy"></div>
+    <div class="verdikt" id="verdikt" style="display:none"></div>
+  </div>
 
-<!-- TÝDEN 1: 4–10.5. -->
-<div class="week-container" id="week-1">
-<div class="week-meta">
-<div class="week-dates">Týden 1 · Po 4.5. – Ne 10.5. · ~30 km</div>
-<div class="week-note">Bez intervalů – tělo vstřebá sobotní zátěž. Klus, tempo, dlouhý výběh.</div>
-</div>
+  <div class="legenda">
+    z každé disciplíny min. 1 bod · celkem min. 50 bodů z 10 disciplín
+  </div>
 
-<div class="day type-easy">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Po 4.5.</span><span class="day-tag">LEHKÝ KLUS</span>
-<span class="day-total">5 km | ~33 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:20–6:40/km — regenerace po sobotních intervalech. Pokud bolí nohy, zkrať na 3–4 km.</div></div><span class="step-dur">~33 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Strečink</div><div class="step-detail">10 min statický – lýtka, hamstringy, kyčle</div></div><span class="step-dur">10 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km · HR zóna 2</div></div>
-</div>
-</div>
-
-<div class="day type-rest">
-<button class="day-header" onclick="return false;">
-<span class="day-date">Út 5.5.</span><span class="day-tag">POSILOVNA</span>
-<span class="day-total">Kliky 4×20 · shyby 4×6 · dřepy 4×20 · plank 4×45s</span>
-</button>
-</div>
-
-<div class="day type-tempo">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">St 6.5.</span><span class="day-tag">TEMPO BĚH</span>
-<span class="day-total">~7 km | ~42 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
-<div class="step"><span class="step-icon">🔥</span><div class="step-info"><div class="step-name">TEMPO 4 km</div><div class="step-detail">@ 5:15/km — nepříjemné ale zvládnutelné. Nesmíš mluvit normálně, ale nejsi na hraně. Toto je laktátový práh.</div></div><span class="step-dur">~21 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km lehký klus + strečink</div></div><span class="step-dur">10 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 4 000 m @ 5:05–5:25/km</div></div>
-</div>
-</div>
-
-<div class="day type-easy">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Čt 7.5.</span><span class="day-tag">LEHKÝ KLUS</span>
-<span class="day-total">5 km | ~33 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:20–6:40/km — regenerace po tempu</div></div><span class="step-dur">~33 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
-</div>
-</div>
-
-<div class="day type-rest">
-<button class="day-header" onclick="return false;">
-<span class="day-date">Pá 8.5.</span><span class="day-tag">VOLNO</span>
-<span class="day-total">Odpočinek před dlouhým výběhem</span>
-</button>
-</div>
-
-<div class="day type-long">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">So 9.5.</span><span class="day-tag">DLOUHÝ VÝBĚH</span>
-<span class="day-total">~13 km | ~82 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🚶</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">1 km chůze</div></div><span class="step-dur">10 min</span></div>
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Dlouhý výběh</div><div class="step-detail">11 km @ 6:00–6:20/km — konverzační tempo celou dobu. Musíš být schopen normálně mluvit. Pokud ne, zpomal.</div></div><span class="step-dur">~68 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km chůze + strečink 10 min</div></div><span class="step-dur">15 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 11 000 m @ 5:55–6:20/km</div></div>
-</div>
-</div>
-
-<div class="day type-rest">
-<button class="day-header" onclick="return false;">
-<span class="day-date">Ne 10.5.</span><span class="day-tag">VOLNO</span>
-<span class="day-total">Aktivní odpočinek – procházka, strečink</span>
-</button>
-</div>
-
-<div class="week-summary">
-<div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">~30 km</div></div>
-<div style="text-align:right"><div class="summary-label">TRÉNINKY</div><div class="summary-val">4</div></div>
-<div style="text-align:right"><div class="summary-label">INTENZIVNÍ</div><div class="summary-val red">1</div></div>
-</div>
-</div>
-
-<!-- TÝDEN 2: 11–17.5. -->
-<div class="week-container" id="week-2">
-<div class="week-meta">
-<div class="week-dates">Týden 2 · Po 11.5. – Ne 17.5. · ~41 km</div>
-<div class="week-note">Intervaly se vrací – ale správným tempem 4:45/km. Žádné hrdinství!</div>
-</div>
-
-<div class="day type-intervals">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Po 11.5.</span><span class="day-tag">INTERVALY</span>
-<span class="day-total">~7.5 km | ~52 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km + dynamický strečink 5 min</div></div><span class="step-dur">~17 min</span></div>
-<div class="step"><span class="step-icon">⚡</span><div class="step-info"><div class="step-name">8× 400 m INTERVAL</div><div class="step-detail">Tempo 4:45/km — po každém 90 sekund chůze. Každé opakování stejné tempo. Pokud v 6. kole jsi pod 5:00/km, zastav – raději méně opakování ve správném tempu.</div></div><span class="step-dur">~26 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km lehký klus + strečink</div></div><span class="step-dur">10 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Interval: 8× [400m @ 4:35–4:55/km + 90s recovery chůze]</div></div>
-</div>
-</div>
-
-<div class="day type-easy">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Út 12.5.</span><span class="day-tag">LEHKÝ KLUS</span>
-<span class="day-total">5 km | ~33 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:20–6:40/km — regenerace po intervalech, opravdu pomalu</div></div><span class="step-dur">~33 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
-</div>
-</div>
-
-<div class="day type-rest">
-<button class="day-header" onclick="return false;">
-<span class="day-date">St 13.5.</span><span class="day-tag">POSILOVNA</span>
-<span class="day-total">Kliky 4×25 · shyby 4×8 · dřepy 4×25 · plank 4×60s</span>
-</button>
-</div>
-
-<div class="day type-tempo">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Čt 14.5.</span><span class="day-tag">TEMPO BĚH</span>
-<span class="day-total">~7 km | ~42 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
-<div class="step"><span class="step-icon">🔥</span><div class="step-info"><div class="step-name">TEMPO 4 km</div><div class="step-detail">@ 5:15/km — stejné jako minulý týden. Cíl je zvládnout ho lépe a klidněji, ne rychleji.</div></div><span class="step-dur">~21 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 4 000 m @ 5:05–5:25/km</div></div>
-</div>
-</div>
-
-<div class="day type-easy">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Pá 15.5.</span><span class="day-tag">LEHKÝ KLUS</span>
-<span class="day-total">6 km | ~38 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">6 km @ 6:20–6:40/km</div></div><span class="step-dur">~38 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 6 000 m @ 6:30/km</div></div>
-</div>
-</div>
-
-<div class="day type-long">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">So 16.5.</span><span class="day-tag">DLOUHÝ VÝBĚH</span>
-<span class="day-total">~15 km | ~93 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🚶</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">1 km chůze</div></div><span class="step-dur">10 min</span></div>
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Dlouhý výběh</div><div class="step-detail">13 km @ 6:00–6:20/km — o 2 km více než minulý týden. Stále konverzační tempo.</div></div><span class="step-dur">~80 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km chůze + strečink</div></div><span class="step-dur">15 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 13 000 m @ 5:55–6:20/km</div></div>
-</div>
-</div>
-
-<div class="day type-rest">
-<button class="day-header" onclick="return false;">
-<span class="day-date">Ne 17.5.</span><span class="day-tag">VOLNO</span>
-<span class="day-total">Aktivní odpočinek</span>
-</button>
-</div>
-
-<div class="week-summary">
-<div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">~41 km</div></div>
-<div style="text-align:right"><div class="summary-label">TRÉNINKY</div><div class="summary-val">5</div></div>
-<div style="text-align:right"><div class="summary-label">INTENZIVNÍ</div><div class="summary-val red">2</div></div>
-</div>
-</div>
-
-<!-- TÝDEN 3: 18–24.5. -->
-<div class="week-container" id="week-3">
-<div class="week-meta">
-<div class="week-dates">Týden 3 · Po 18.5. – Ne 24.5. · ~45 km</div>
-<div class="week-note">Nejtěžší týden – +2 intervaly, tempo prodlouženo na 5 km</div>
-</div>
-
-<div class="day type-intervals">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Po 18.5.</span><span class="day-tag">INTERVALY +2</span>
-<span class="day-total">~8.5 km | ~58 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km + dynamický strečink</div></div><span class="step-dur">~17 min</span></div>
-<div class="step"><span class="step-icon">⚡</span><div class="step-info"><div class="step-name">10× 400 m INTERVAL</div><div class="step-detail">Tempo 4:45/km — 2 opakování více než minulý týden. Poslední 2 budou bolet, to je správně. Pauza 90s nezkracovat!</div></div><span class="step-dur">~30 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Interval: 10× [400m @ 4:35–4:55/km + 90s recovery]</div></div>
-</div>
-</div>
-
-<div class="day type-easy">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Út 19.5.</span><span class="day-tag">LEHKÝ KLUS</span>
-<span class="day-total">5 km | ~33 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:20–6:40/km</div></div><span class="step-dur">~33 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
-</div>
-</div>
-
-<div class="day type-rest">
-<button class="day-header" onclick="return false;">
-<span class="day-date">St 20.5.</span><span class="day-tag">POSILOVNA</span>
-<span class="day-total">Kliky 4×30 · shyby 4×10 · dřepy 4×30 · plank 4×60s</span>
-</button>
-</div>
-
-<div class="day type-tempo">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Čt 21.5.</span><span class="day-tag">TEMPO 5 KM</span>
-<span class="day-total">~9 km | ~50 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
-<div class="step"><span class="step-icon">🔥</span><div class="step-info"><div class="step-name">TEMPO 5 km</div><div class="step-detail">@ 5:10/km — o 1 km delší a o 5 vteřin rychlejší. Toto je závodní příprava. Pokud nestíháš tempo, drž 5:15/km – to stačí.</div></div><span class="step-dur">~26 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 5:00–5:20/km</div></div>
-</div>
-</div>
-
-<div class="day type-easy">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Pá 22.5.</span><span class="day-tag">LEHKÝ KLUS</span>
-<span class="day-total">6 km | ~38 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">6 km @ 6:20–6:40/km</div></div><span class="step-dur">~38 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 6 000 m @ 6:30/km</div></div>
-</div>
-</div>
-
-<div class="day type-long">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">So 23.5.</span><span class="day-tag">DLOUHÝ VÝBĚH</span>
-<span class="day-total">~15 km | ~93 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🚶</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">1 km chůze</div></div><span class="step-dur">10 min</span></div>
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Dlouhý výběh</div><div class="step-detail">13 km @ 6:00–6:20/km — nohy budou unavené po těžkém týdnu. Neboj se zpomalit na 6:30/km, důležité je doběhnout.</div></div><span class="step-dur">~80 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km chůze + strečink</div></div><span class="step-dur">15 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 13 000 m @ 5:55–6:20/km</div></div>
-</div>
-</div>
-
-<div class="day type-rest">
-<button class="day-header" onclick="return false;">
-<span class="day-date">Ne 24.5.</span><span class="day-tag">VOLNO</span>
-<span class="day-total">Zasloužený odpočinek</span>
-</button>
-</div>
-
-<div class="week-summary">
-<div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">~45 km</div></div>
-<div style="text-align:right"><div class="summary-label">TRÉNINKY</div><div class="summary-val">5</div></div>
-<div style="text-align:right"><div class="summary-label">INTENZIVNÍ</div><div class="summary-val red">2</div></div>
-</div>
-</div>
-
-<!-- TÝDEN 4 + COOPER: 25–30.5. -->
-<div class="week-container" id="week-4">
-<div class="week-meta">
-<div class="week-dates">Týden 4 + Cooper · Po 25.5. – So 30.5.</div>
-<div class="week-note">Regenerační týden → Cooper v sobotu. Méně objemu, zachovat intenzitu.</div>
-</div>
-
-<div class="day type-intervals">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Po 25.5.</span><span class="day-tag">INTERVALY LEHČÍ</span>
-<span class="day-total">~6 km | ~42 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
-<div class="step"><span class="step-icon">⚡</span><div class="step-info"><div class="step-name">6× 400 m INTERVAL</div><div class="step-detail">Tempo 4:40/km — méně opakování, mírně rychlejší. Regenerační = méně, ne pomaleji. Tělo se chystá na Cooper.</div></div><span class="step-dur">~18 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Interval: 6× [400m @ 4:30–4:50/km + 90s recovery]</div></div>
-</div>
-</div>
-
-<div class="day type-easy">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">Út 26.5.</span><span class="day-tag">LEHKÝ KLUS</span>
-<span class="day-total">5 km | ~33 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Lehký klus</div><div class="step-detail">5 km @ 6:30/km — poslední delší běh před Cooperem</div></div><span class="step-dur">~33 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 5 000 m @ 6:30/km</div></div>
-</div>
-</div>
-
-<div class="day type-tempo">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">St 27.5.</span><span class="day-tag">KRÁTKÉ TEMPO</span>
-<span class="day-total">~6 km | ~35 min</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">2 km @ 6:30/km</div></div><span class="step-dur">~13 min</span></div>
-<div class="step"><span class="step-icon">🔥</span><div class="step-info"><div class="step-name">TEMPO 3 km</div><div class="step-detail">@ 5:05/km — kratší než obvykle, udržuje formu bez přetížení. Poslední tvrdý trénink před Cooperem.</div></div><span class="step-dur">~15 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">1 km + strečink</div></div><span class="step-dur">10 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Tempo: 3 000 m @ 4:55–5:15/km</div></div>
-</div>
-</div>
-
-<div class="day type-rest">
-<button class="day-header" onclick="return false;">
-<span class="day-date">Čt 28.5.</span><span class="day-tag">VOLNO</span>
-<span class="day-total">Odpočinek – žádný běh!</span>
-</button>
-</div>
-
-<div class="day type-rest">
-<button class="day-header" onclick="return false;">
-<span class="day-date">Pá 29.5.</span><span class="day-tag">VOLNO</span>
-<span class="day-total">Odpočinek – žádný běh! Spi hodně.</span>
-</button>
-</div>
-
-<div class="day type-cooper">
-<button class="day-header" onclick="toggleDay(this)">
-<span class="day-date">So 30.5.</span><span class="day-tag">🏁 COOPER TEST</span>
-<span class="day-total">Cíl: 2600+ m za 12 minut</span><span class="day-arrow">▼</span>
-</button>
-<div class="day-body">
-<div class="step"><span class="step-icon">🏃</span><div class="step-info"><div class="step-name">Rozcvička</div><div class="step-detail">10 min lehký klus @ 6:30/km + dynamický strečink 5 min. Musíš být pořádně rozcvičený.</div></div><span class="step-dur">15 min</span></div>
-<div class="step"><span class="step-icon">🏁</span><div class="step-info"><div class="step-name">COOPER TEST – 12 minut MAXIMUM</div><div class="step-detail">Absolutní maximum. Začni tempem ~4:50/km – pokud je lehce, přidej. Poslední 3 minuty dej úplně vše. Cíl 2600 m = 217 m/min = tempo 4:37/km.</div></div><span class="step-dur">12 min</span></div>
-<div class="step"><span class="step-icon">🧘</span><div class="step-info"><div class="step-name">Vychladnutí</div><div class="step-detail">10 min pomalá chůze – nezastavuj ihned po doběhnutí!</div></div><span class="step-dur">10 min</span></div>
-<div class="garmin-box"><div class="garmin-label">GARMIN CONNECT</div><div class="garmin-text">→ Interval: [10min warmup] + [12min @ Max Effort – bez cílového tempa] + [10min cooldown]</div></div>
-</div>
-</div>
-
-<div class="week-summary">
-<div><div class="summary-label">TÝDENNÍ OBJEM</div><div class="summary-val">~20 km</div></div>
-<div style="text-align:right"><div class="summary-label">ZÁMĚRNĚ MÉNĚ</div><div class="summary-val">✓</div></div>
-<div style="text-align:right"><div class="summary-label">COOPER CÍL</div><div class="summary-val red">2600 m</div></div>
-</div>
-</div>
-
-<div class="legend">
-<div class="legend-item"><div class="legend-dot" style="background:#FF4B4B"></div><span class="legend-text">Intervaly</span></div>
-<div class="legend-item"><div class="legend-dot" style="background:#FFB84B"></div><span class="legend-text">Tempo</span></div>
-<div class="legend-item"><div class="legend-dot" style="background:#4BFF9E"></div><span class="legend-text">Lehký klus</span></div>
-<div class="legend-item"><div class="legend-dot" style="background:#4B9EFF"></div><span class="legend-text">Dlouhý výběh</span></div>
-<div class="legend-item"><div class="legend-dot" style="background:#C84BFF"></div><span class="legend-text">Cooper test</span></div>
-<div class="legend-item"><div class="legend-dot" style="background:#888"></div><span class="legend-text">Volno</span></div>
 </div>
 
 <script>
-function showWeek(i) {
-document.querySelectorAll('.week-container').forEach((el,j) => el.classList.toggle('active', i===j));
-document.querySelectorAll('.pill').forEach((el,j) => el.classList.toggle('active', i===j));
-}
-function toggleDay(btn) {
-if (btn.closest('.type-rest')) return;
-const body = btn.nextElementSibling;
-const arrow = btn.querySelector('.day-arrow');
-if (!body || !arrow) return;
-const open = body.classList.contains('open');
-body.classList.toggle('open', !open);
-btn.classList.toggle('open', !open);
-arrow.textContent = open ? '▼' : '▲';
-}
+  const discipliny = [
+    { id:"lehsed",   nazev:"Leh-sed",           jednotka:"opak. / 2 min", vaha:8,  vyssi:true,  prahy:[85,87,89,91,93,95,97,99,101,105] },
+    { id:"splh",     nazev:"Šplh",              jednotka:"sec.",          vaha:3,  vyssi:false, prahy:[7.40,7.00,6.40,6.20,6.00,5.40,5.20,5.00,4.30,4.00] },
+    { id:"cmt",      nazev:"CMT",               jednotka:"opak. / 2 min", vaha:5,  vyssi:true,  prahy:[35,36,37,38,39,40,41,42,43,44] },
+    { id:"shyby",    nazev:"Shyby",             jednotka:"opakování",     vaha:6,  vyssi:true,  prahy:[13,14,15,16,17,18,19,20,21,22] },
+    { id:"beh3km",   nazev:"Běh 3 km",          jednotka:"min.",          vaha:2,  vyssi:false, prahy:[13.00,12.50,12.40,12.20,12.00,11.40,11.20,11.00,10.50,10.40] },
+    { id:"bench",    nazev:"Bench press 50 kg", jednotka:"opakování",     vaha:7,  vyssi:true,  prahy:[20,21,22,23,24,25,26,27,28,30] },
+    { id:"kliky",    nazev:"Kliky",             jednotka:"opak. / 2 min", vaha:4,  vyssi:true,  prahy:[54,56,58,60,62,64,66,68,70,73] },
+    { id:"clunkovy", nazev:"Člunkový běh",      jednotka:"sec.",          vaha:9,  vyssi:false, prahy:[11.6,11.4,11.2,11.0,10.8,10.6,10.4,10.2,10.0,9.8] },
+    { id:"prekazky", nazev:"Překážková dráha",  jednotka:"min.",          vaha:10, vyssi:false, prahy:[8.10,7.50,7.40,7.30,7.20,7.10,7.00,6.50,6.40,6.30] },
+    { id:"plavani",  nazev:"Plavání 200 m",     jednotka:"min.",          vaha:1,  vyssi:false, prahy:[4.50,4.40,4.30,4.15,4.00,3.55,3.50,3.45,3.40,3.30] },
+  ];
+
+  function ziskejBody(d, hodnota) {
+    if (hodnota === "" || hodnota === null) return null;
+    const v = parseFloat(hodnota);
+    if (isNaN(v)) return null;
+    if (d.vyssi) {
+      for (let i = 9; i >= 0; i--) if (v >= d.prahy[i]) return i + 1;
+      return 0;
+    } else {
+      for (let i = 9; i >= 0; i--) if (v <= d.prahy[i]) return i + 1;
+      return 0;
+    }
+  }
+
+  function barvaBodu(b) {
+    if (b === null) return "#444";
+    if (b === 0)   return "#e74c3c";
+    if (b >= 9)    return "#00c896";
+    if (b >= 7)    return "#27ae60";
+    if (b >= 4)    return "#f39c12";
+    return "#e67e22";
+  }
+
+  // Vykresli řádky
+  const radkyEl = document.getElementById("radky");
+  discipliny.forEach((d, i) => {
+    const row = document.createElement("div");
+    row.className = "radek";
+    row.id = "radek-" + d.id;
+
+    row.innerHTML = `
+      <div>
+        <div class="disc-nazev">
+          <span class="disc-vaha">v${d.vaha}</span>
+          ${d.nazev}
+        </div>
+        <div class="disc-jednotka">${d.jednotka}</div>
+        <div class="disc-rozsah">${d.vyssi ? "min. "+d.prahy[0]+" → max. "+d.prahy[9] : "max. "+d.prahy[0]+" → min. "+d.prahy[9]}</div>
+      </div>
+      <div class="input-wrap">
+        <input type="number" step="0.01" placeholder="–" id="input-${d.id}"/>
+      </div>
+      <div class="odznak-wrap">
+        <span class="odznak-prazdny" id="odznak-${d.id}">–</span>
+      </div>
+    `;
+    radkyEl.appendChild(row);
+
+    document.getElementById("input-" + d.id).addEventListener("input", aktualizuj);
+  });
+
+  function aktualizuj() {
+    const vysledky = discipliny.map(d => {
+      const val = document.getElementById("input-" + d.id).value;
+      return { ...d, body: ziskejBody(d, val), val };
+    });
+
+    const vyplnene = vysledky.filter(d => d.body !== null);
+    const celkem = vyplnene.reduce((s, d) => s + d.body, 0);
+    const vsechnoVyplneno = vyplnene.length === 10;
+    const maZadneNula = vysledky.some(d => d.body === 0);
+    const splneno = vsechnoVyplneno && !maZadneNula && celkem >= 50;
+
+    // Aktualizuj odznaky a řádky
+    vysledky.forEach(d => {
+      const odznak = document.getElementById("odznak-" + d.id);
+      const radek = document.getElementById("radek-" + d.id);
+      const input = document.getElementById("input-" + d.id);
+
+      if (d.body === null) {
+        odznak.outerHTML = `<span class="odznak-prazdny" id="odznak-${d.id}">–</span>`;
+        radek.classList.remove("chyba");
+        input.classList.remove("chyba-input");
+      } else {
+        const barva = barvaBodu(d.body);
+        const el = document.getElementById("odznak-" + d.id);
+        if (el.tagName === "SPAN") {
+          el.outerHTML = `<div class="odznak" id="odznak-${d.id}" style="background:${barva};box-shadow:0 0 12px ${barva}88">${d.body}</div>`;
+        } else {
+          el.style.background = barva;
+          el.style.boxShadow = "0 0 12px " + barva + "88";
+          el.textContent = d.body;
+        }
+        if (d.body === 0) {
+          radek.classList.add("chyba");
+          input.classList.add("chyba-input");
+        } else {
+          radek.classList.remove("chyba");
+          input.classList.remove("chyba-input");
+        }
+      }
+    });
+
+    // Celkový počet
+    const cislEl = document.getElementById("celkem-cislo");
+    const barvaC = celkem >= 50 ? "#00c896" : celkem > 0 ? "#f39c12" : "#555";
+    cislEl.innerHTML = `<span style="color:${barvaC}">${celkem}</span><span class="celkem-max">/100</span>`;
+
+    // Vyplněno
+    const vypEl = document.getElementById("vyplneno-pocet");
+    vypEl.textContent = vyplnene.length + " / 10";
+    vypEl.style.color = vyplnene.length === 10 ? "#00c896" : "#f39c12";
+
+    // Mini tagy
+    const tagy = document.getElementById("mini-tagy");
+    tagy.innerHTML = "";
+    if (vyplnene.length > 0) {
+      vysledky.forEach(d => {
+        const tag = document.createElement("div");
+        tag.className = "mini-tag";
+        const jmeno = d.nazev.split(" ")[0];
+        tag.innerHTML = `<span>${jmeno}</span>` + (d.body !== null ? `<span class="mini-body" style="color:${barvaBodu(d.body)}">${d.body}</span>` : "");
+        tagy.appendChild(tag);
+      });
+    }
+
+    // Verdikt
+    const verdikt = document.getElementById("verdikt");
+    if (vsechnoVyplneno) {
+      verdikt.style.display = "block";
+      if (splneno) {
+        verdikt.style.background = "linear-gradient(135deg,rgba(0,200,150,0.15),rgba(0,200,150,0.05))";
+        verdikt.style.border = "1px solid #00c89644";
+        verdikt.innerHTML = `
+          <div class="verdikt-text" style="color:#00c896">✓ ZPŮSOBILÝ</div>
+          <div class="verdikt-sub">Všechny podmínky jsou splněny.</div>
+        `;
+      } else {
+        verdikt.style.background = "linear-gradient(135deg,rgba(231,76,60,0.15),rgba(231,76,60,0.05))";
+        verdikt.style.border = "1px solid #e74c3c44";
+        const duvod = maZadneNula
+          ? "Alespoň jedna disciplína nesplňuje minimální limit."
+          : "Celkový počet bodů (" + celkem + ") je nižší než požadovaných 50.";
+        verdikt.innerHTML = `
+          <div class="verdikt-text" style="color:#e74c3c">✗ NEZPŮSOBILÝ</div>
+          <div class="verdikt-sub">${duvod}</div>
+        `;
+      }
+    } else {
+      verdikt.style.display = "none";
+    }
+  }
 </script>
+
 </body>
 </html>
