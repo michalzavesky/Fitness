@@ -1,239 +1,216 @@
 <!DOCTYPE html>
-
 <html lang="cs">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fyzická způsobilost</title>
+  <title>Fyzická způsobilost – Testy I.</title>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background-color: #f0f4f8; min-height: 100%; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #1a202c;
+      padding: 1.5rem 1rem 3rem;
+    }
+    .container { max-width: 680px; margin: 0 auto; }
 
-```
-html, body {
-  background-color: #f0f4f8;
-  min-height: 100%;
-}
+    .nadpis {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding: 1.6rem 1rem;
+      background: #1a365d;
+      border-radius: 16px;
+      color: #fff;
+    }
+    .nadpis h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+      letter-spacing: 0.07em;
+      color: #fff;
+    }
+    .nadpis p {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      color: #90cdf4;
+      margin-top: 5px;
+      text-transform: uppercase;
+    }
 
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-  color: #1a202c;
-  padding: 1.5rem 1rem 3rem;
-}
+    .karta {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+      margin-bottom: 1.2rem;
+    }
 
-.container {
-  max-width: 660px;
-  margin: 0 auto;
-}
+    .tabulka-header {
+      display: grid;
+      grid-template-columns: 1fr 100px 52px;
+      padding: 0.65rem 1rem;
+      background: #1a365d;
+      font-size: 0.63rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      color: #90cdf4;
+      text-transform: uppercase;
+    }
+    .tabulka-header span:nth-child(2),
+    .tabulka-header span:nth-child(3) { text-align: center; }
 
-/* NADPIS */
-.nadpis {
-  text-align: center;
-  margin-bottom: 1.8rem;
-  padding: 1.8rem 1rem;
-  background: #1a365d;
-  border-radius: 16px;
-  color: #fff;
-}
-.nadpis h1 {
-  font-family: 'Oswald', sans-serif;
-  font-size: clamp(1.6rem, 5vw, 2.4rem);
-  letter-spacing: 0.08em;
-  color: #fff;
-}
-.nadpis p {
-  font-size: 0.75rem;
-  letter-spacing: 0.25em;
-  color: #90cdf4;
-  margin-top: 6px;
-  text-transform: uppercase;
-}
+    .radek {
+      display: grid;
+      grid-template-columns: 1fr 100px 52px;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      transition: background 0.15s;
+    }
+    .radek:last-child { border-bottom: none; }
+    .radek:hover { background: #f7fafc; }
+    .radek.chyba { background: #fff5f5; }
 
-/* TABULKA */
-.karta {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  overflow: hidden;
-  margin-bottom: 1.2rem;
-}
+    .disc-nazev {
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: #1a202c;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .disc-jednotka {
+      font-size: 0.67rem;
+      color: #718096;
+      margin-top: 2px;
+    }
+    .disc-rozsah {
+      font-size: 0.61rem;
+      color: #a0aec0;
+      margin-top: 1px;
+    }
+    .disc-hint {
+      font-size: 0.6rem;
+      color: #bee3f8;
+      background: #ebf8ff;
+      border: 1px solid #bee3f8;
+      border-radius: 4px;
+      padding: 1px 5px;
+      margin-top: 3px;
+      display: inline-block;
+    }
 
-.tabulka-header {
-  display: grid;
-  grid-template-columns: 1fr 100px 56px;
-  padding: 0.7rem 1rem;
-  background: #1a365d;
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  color: #90cdf4;
-  text-transform: uppercase;
-}
-.tabulka-header span:nth-child(2) { text-align: center; }
-.tabulka-header span:nth-child(3) { text-align: center; }
+    .input-wrap { display: flex; justify-content: center; }
+    input[type=number] {
+      width: 84px;
+      padding: 7px 6px;
+      background: #f7fafc;
+      border: 1.5px solid #cbd5e0;
+      border-radius: 8px;
+      color: #1a202c;
+      font-size: 0.92rem;
+      font-family: 'Inter', sans-serif;
+      text-align: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -moz-appearance: textfield;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    input[type=number]:focus {
+      outline: none;
+      border-color: #3182ce;
+      box-shadow: 0 0 0 3px rgba(49,130,206,0.15);
+      background: #fff;
+    }
+    input[type=number].chyba-input {
+      border-color: #fc8181;
+      box-shadow: 0 0 0 3px rgba(252,129,129,0.15);
+    }
 
-.radek {
-  display: grid;
-  grid-template-columns: 1fr 100px 56px;
-  align-items: center;
-  padding: 0.8rem 1rem;
-  border-bottom: 1px solid #e2e8f0;
-  transition: background 0.15s;
-}
-.radek:last-child { border-bottom: none; }
-.radek:hover { background: #f7fafc; }
-.radek.chyba { background: #fff5f5; }
+    .odznak-wrap { display: flex; justify-content: center; }
+    .odznak {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .odznak-prazdny { color: #cbd5e0; font-size: 1.2rem; }
 
-.disc-nazev {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #1a202c;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-.disc-vaha {
-  font-size: 0.58rem;
-  background: #ebf8ff;
-  color: #2b6cb0;
-  border: 1px solid #bee3f8;
-  border-radius: 4px;
-  padding: 1px 5px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-.disc-jednotka {
-  font-size: 0.68rem;
-  color: #718096;
-  margin-top: 2px;
-}
-.disc-rozsah {
-  font-size: 0.62rem;
-  color: #a0aec0;
-  margin-top: 1px;
-}
+    .vysledek-karta {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .celkem-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .celkem-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.92rem;
+      letter-spacing: 0.07em;
+      color: #4a5568;
+      text-transform: uppercase;
+    }
+    .celkem-sub { font-size: 0.67rem; color: #a0aec0; margin-top: 2px; }
+    .celkem-cislo {
+      font-family: 'Oswald', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+      color: #2d3748;
+    }
+    .celkem-max { font-size: 1.1rem; color: #a0aec0; }
 
-.input-wrap { display: flex; justify-content: center; }
-input[type=number] {
-  width: 84px;
-  padding: 7px 8px;
-  background: #f7fafc;
-  border: 1.5px solid #cbd5e0;
-  border-radius: 8px;
-  color: #1a202c;
-  font-size: 0.95rem;
-  font-family: 'Inter', sans-serif;
-  text-align: center;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  -moz-appearance: textfield;
-}
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
-input[type=number]:focus {
-  outline: none;
-  border-color: #3182ce;
-  box-shadow: 0 0 0 3px rgba(49,130,206,0.15);
-  background: #fff;
-}
-input[type=number].chyba-input {
-  border-color: #fc8181;
-  box-shadow: 0 0 0 3px rgba(252,129,129,0.15);
-}
+    .discipliny-row {
+      background: #f7fafc;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #718096;
+      border: 1px solid #e2e8f0;
+    }
 
-.odznak-wrap { display: flex; justify-content: center; }
-.odznak {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.95rem;
-  flex-shrink: 0;
-}
-.odznak-prazdny {
-  color: #cbd5e0;
-  font-size: 1.1rem;
-  font-weight: 400;
-}
+    .mini-tagy { display: flex; flex-wrap: wrap; gap: 5px; }
+    .mini-tag {
+      display: flex; align-items: center; gap: 4px;
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 0.66rem;
+      color: #718096;
+    }
+    .mini-body { font-weight: 700; }
 
-/* VÝSLEDEK */
-.vysledek-karta {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  padding: 1.4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+    .verdikt {
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      text-align: center;
+    }
+    .verdikt-text {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+    }
+    .verdikt-sub { font-size: 0.74rem; margin-top: 4px; color: #718096; }
 
-.celkem-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.celkem-label {
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.95rem;
-  letter-spacing: 0.08em;
-  color: #4a5568;
-  text-transform: uppercase;
-}
-.celkem-sub { font-size: 0.68rem; color: #a0aec0; margin-top: 2px; }
-.celkem-cislo {
-  font-family: 'Oswald', sans-serif;
-  font-size: 3rem;
-  font-weight: 700;
-  line-height: 1;
-  color: #2d3748;
-}
-.celkem-max { font-size: 1.1rem; color: #a0aec0; }
-
-.discipliny-row {
-  background: #f7fafc;
-  border-radius: 10px;
-  padding: 0.7rem 1rem;
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  color: #718096;
-  border: 1px solid #e2e8f0;
-}
-
-.mini-tagy { display: flex; flex-wrap: wrap; gap: 5px; }
-.mini-tag {
-  display: flex; align-items: center; gap: 4px;
-  background: #f7fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  padding: 3px 8px;
-  font-size: 0.67rem;
-  color: #718096;
-}
-.mini-body { font-weight: 700; }
-
-.verdikt {
-  border-radius: 12px;
-  padding: 1rem 1.2rem;
-  text-align: center;
-}
-.verdikt-text {
-  font-family: 'Oswald', sans-serif;
-  font-size: 1.4rem;
-  letter-spacing: 0.1em;
-  font-weight: 700;
-}
-.verdikt-sub { font-size: 0.75rem; margin-top: 4px; color: #718096; }
-
-.legenda {
-  margin-top: 1rem;
-  font-size: 0.68rem;
-  color: #a0aec0;
-  text-align: center;
-  line-height: 1.8;
-}
-```
-
+    .legenda {
+      margin-top: 1rem;
+      font-size: 0.68rem;
+      color: #a0aec0;
+      text-align: center;
+      line-height: 1.8;
+    }
   </style>
 </head>
 <body>
@@ -241,7 +218,7 @@ input[type=number].chyba-input {
 
   <div class="nadpis">
     <h1>FYZICKÁ ZPŮSOBILOST</h1>
-    <p>Ověření limitů · 04/2024</p>
+    <p>Bodové hodnocení · Testy I.</p>
   </div>
 
   <div class="karta">
@@ -257,42 +234,69 @@ input[type=number].chyba-input {
     <div class="celkem-row">
       <div>
         <div class="celkem-label">Celkový počet bodů</div>
-        <div class="celkem-sub">Min. 50 bodů z 10 disciplín</div>
+        <div class="celkem-sub">Min. 35 bodů z 8 disciplín</div>
       </div>
       <div class="celkem-cislo" id="celkem-cislo">
-        0<span class="celkem-max">/100</span>
+        0<span class="celkem-max">/80</span>
       </div>
     </div>
-
-```
-<div class="discipliny-row">
-  <span>Vyplněno disciplín</span>
-  <span id="vyplneno-pocet" style="font-weight:600;color:#718096">0 / 10</span>
-</div>
-
-<div class="mini-tagy" id="mini-tagy"></div>
-<div class="verdikt" id="verdikt" style="display:none"></div>
-```
-
+    <div class="discipliny-row">
+      <span>Vyplněno disciplín</span>
+      <span id="vyplneno-pocet" style="font-weight:600;color:#718096">0 / 8</span>
+    </div>
+    <div class="mini-tagy" id="mini-tagy"></div>
+    <div class="verdikt" id="verdikt" style="display:none"></div>
   </div>
 
   <div class="legenda">
-    z každé disciplíny min. 1 bod · celkem min. 50 bodů z 10 disciplín
+    z každé disciplíny min. 1 bod · celkem min. 35 bodů z 8 disciplín<br/>
+    Čas zadávejte ve formátu MM.SS (např. 25 min 30 s = 25.30)
   </div>
+
 </div>
 
 <script>
   var discipliny = [
-    { id:"lehsed",   nazev:"Leh-sed",           jednotka:"opak. / 2 min", vaha:8,  vyssi:true,  prahy:[85,87,89,91,93,95,97,99,101,105] },
-    { id:"splh",     nazev:"Šplh",              jednotka:"sec.",          vaha:3,  vyssi:false, prahy:[7.40,7.00,6.40,6.20,6.00,5.40,5.20,5.00,4.30,4.00] },
-    { id:"cmt",      nazev:"CMT",               jednotka:"opak. / 2 min", vaha:5,  vyssi:true,  prahy:[35,36,37,38,39,40,41,42,43,44] },
-    { id:"shyby",    nazev:"Shyby",             jednotka:"opakování",     vaha:6,  vyssi:true,  prahy:[13,14,15,16,17,18,19,20,21,22] },
-    { id:"beh3km",   nazev:"Běh 3 km",          jednotka:"min.",          vaha:2,  vyssi:false, prahy:[13.00,12.50,12.40,12.20,12.00,11.40,11.20,11.00,10.50,10.40] },
-    { id:"bench",    nazev:"Bench press 50 kg", jednotka:"opakování",     vaha:7,  vyssi:true,  prahy:[20,21,22,23,24,25,26,27,28,30] },
-    { id:"kliky",    nazev:"Kliky",             jednotka:"opak. / 2 min", vaha:4,  vyssi:true,  prahy:[54,56,58,60,62,64,66,68,70,73] },
-    { id:"clunkovy", nazev:"Člunkový běh",      jednotka:"sec.",          vaha:9,  vyssi:false, prahy:[11.6,11.4,11.2,11.0,10.8,10.6,10.4,10.2,10.0,9.8] },
-    { id:"prekazky", nazev:"Překážková dráha",  jednotka:"min.",          vaha:10, vyssi:false, prahy:[8.10,7.50,7.40,7.30,7.20,7.10,7.00,6.50,6.40,6.30] },
-    { id:"plavani",  nazev:"Plavání 200 m",     jednotka:"min.",          vaha:1,  vyssi:false, prahy:[4.50,4.40,4.30,4.15,4.00,3.55,3.50,3.45,3.40,3.30] }
+    {
+      id:"sedleh", nazev:"Sed-leh", jednotka:"počet opakování / 2 min",
+      hint:"", vyssi:true,
+      prahy:[84,87,90,93,96,99,102,105,108,111]
+    },
+    {
+      id:"splh", nazev:"Šplh", jednotka:"sekundy (s)",
+      hint:"nižší = lepší", vyssi:false,
+      prahy:[9.00,8.50,8.00,7.50,7.00,6.50,6.00,5.50,5.00,4.50]
+    },
+    {
+      id:"kliky", nazev:"Kliky", jednotka:"počet opakování",
+      hint:"", vyssi:true,
+      prahy:[50,53,56,59,62,65,68,71,74,77]
+    },
+    {
+      id:"pritahy", nazev:"Přítahy", jednotka:"počet opakování",
+      hint:"", vyssi:true,
+      prahy:[10,11,12,13,14,15,16,17,18,19]
+    },
+    {
+      id:"clunkovy", nazev:"Člunkový běh", jednotka:"sekundy (s)",
+      hint:"nižší = lepší", vyssi:false,
+      prahy:[11.80,11.40,11.00,10.80,10.60,10.40,10.20,10.00,9.80,9.60]
+    },
+    {
+      id:"prekazky", nazev:"Překážková dráha", jednotka:"min (formát MM.SS)",
+      hint:"nižší = lepší · např. 7 min 20 s = 7.20", vyssi:false,
+      prahy:[7.20,7.10,7.00,6.50,6.40,6.30,6.20,6.10,6.00,5.50]
+    },
+    {
+      id:"beh5km", nazev:"Běh 5 km", jednotka:"min (formát MM.SS)",
+      hint:"nižší = lepší · např. 25 min 30 s = 25.30", vyssi:false,
+      prahy:[25.30,25.00,24.30,24.00,23.30,23.00,22.30,22.00,21.30,21.00]
+    },
+    {
+      id:"plavani", nazev:"Plavání 400 m", jednotka:"min (formát MM.SS)",
+      hint:"nižší = lepší · např. 10 min = 10.00", vyssi:false,
+      prahy:[10.00,9.30,9.00,8.30,8.00,7.40,7.20,7.00,6.40,6.20]
+    }
   ];
 
   function ziskejBody(d, hodnota) {
@@ -311,10 +315,10 @@ input[type=number].chyba-input {
   function barvaBodu(b) {
     if (b === null) return "#a0aec0";
     if (b === 0)   return "#e53e3e";
-    if (b >= 9)    return "#38a169";
+    if (b >= 9)    return "#276749";
     if (b >= 7)    return "#2f855a";
-    if (b >= 4)    return "#d69e2e";
-    return "#dd6b20";
+    if (b >= 4)    return "#b7791f";
+    return "#c05621";
   }
 
   // Vykresli řádky
@@ -331,12 +335,10 @@ input[type=number].chyba-input {
 
       row.innerHTML =
         '<div>' +
-          '<div class="disc-nazev">' +
-            '<span class="disc-vaha">v' + d.vaha + '</span>' +
-            d.nazev +
-          '</div>' +
+          '<div class="disc-nazev">' + d.nazev + '</div>' +
           '<div class="disc-jednotka">' + d.jednotka + '</div>' +
           '<div class="disc-rozsah">' + rozsah + '</div>' +
+          (d.hint ? '<span class="disc-hint">' + d.hint + '</span>' : '') +
         '</div>' +
         '<div class="input-wrap">' +
           '<input type="number" step="0.01" placeholder="–" id="input-' + d.id + '"/>' +
@@ -360,9 +362,9 @@ input[type=number].chyba-input {
 
     var vyplnene = vysledky.filter(function(d) { return d.body !== null; });
     var celkem = vyplnene.reduce(function(s, d) { return s + d.body; }, 0);
-    var vsechnoVyplneno = vyplnene.length === 10;
+    var vsechnoVyplneno = vyplnene.length === 8;
     var maZadneNula = vysledky.some(function(d) { return d.body === 0; });
-    var splneno = vsechnoVyplneno && !maZadneNula && celkem >= 50;
+    var splneno = vsechnoVyplneno && !maZadneNula && celkem >= 35;
 
     // Odznaky
     for (var i = 0; i < vysledky.length; i++) {
@@ -389,14 +391,14 @@ input[type=number].chyba-input {
     }
 
     // Celkem
-    var barvaC = celkem >= 50 ? "#38a169" : celkem > 0 ? "#d69e2e" : "#a0aec0";
+    var barvaC = celkem >= 35 ? "#276749" : celkem > 0 ? "#b7791f" : "#a0aec0";
     document.getElementById("celkem-cislo").innerHTML =
-      '<span style="color:' + barvaC + '">' + celkem + '</span><span class="celkem-max">/100</span>';
+      '<span style="color:' + barvaC + '">' + celkem + '</span><span class="celkem-max">/80</span>';
 
     // Vyplněno
     var vypEl = document.getElementById("vyplneno-pocet");
-    vypEl.textContent = vyplnene.length + " / 10";
-    vypEl.style.color = vyplnene.length === 10 ? "#38a169" : "#d69e2e";
+    vypEl.textContent = vyplnene.length + " / 8";
+    vypEl.style.color = vyplnene.length === 8 ? "#276749" : "#b7791f";
 
     // Mini tagy
     var tagy = document.getElementById("mini-tagy");
@@ -427,8 +429,8 @@ input[type=number].chyba-input {
         verdikt.style.background = "#fff5f5";
         verdikt.style.border = "1.5px solid #feb2b2";
         var duvod = maZadneNula
-          ? "Alespoň jedna disciplína nesplňuje minimální limit."
-          : "Celkový počet bodů (" + celkem + ") je nižší než požadovaných 50.";
+          ? "Alespoň jedna disciplína nesplňuje minimální limit (1 bod)."
+          : "Celkový počet bodů (" + celkem + ") je nižší než požadovaných 35.";
         verdikt.innerHTML =
           '<div class="verdikt-text" style="color:#c53030">✗ NEZPŮSOBILÝ</div>' +
           '<div class="verdikt-sub">' + duvod + '</div>';
@@ -438,6 +440,5 @@ input[type=number].chyba-input {
     }
   }
 </script>
-
 </body>
 </html>
