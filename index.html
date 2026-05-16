@@ -10,130 +10,158 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 ```
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-  background: linear-gradient(135deg, #0a0e18 0%, #111827 100%);
-  min-height: 100vh;
-  color: #dde1ea;
-  padding: 1.5rem 1rem;
+html, body {
+  background-color: #f0f4f8;
+  min-height: 100%;
 }
 
-.container { max-width: 680px; margin: 0 auto; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #1a202c;
+  padding: 1.5rem 1rem 3rem;
+}
 
+.container {
+  max-width: 660px;
+  margin: 0 auto;
+}
+
+/* NADPIS */
 .nadpis {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.8rem;
+  padding: 1.8rem 1rem;
+  background: #1a365d;
+  border-radius: 16px;
+  color: #fff;
 }
 .nadpis h1 {
   font-family: 'Oswald', sans-serif;
-  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
   letter-spacing: 0.08em;
   color: #fff;
-  text-shadow: 0 2px 20px rgba(74,144,226,0.4);
 }
 .nadpis p {
-  font-size: 0.72rem;
-  letter-spacing: 0.3em;
-  color: #4a90e2;
-  margin-top: 4px;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: #90cdf4;
+  margin-top: 6px;
   text-transform: uppercase;
 }
 
-.tabulka {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
+/* TABULKA */
+.karta {
+  background: #fff;
   border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   overflow: hidden;
+  margin-bottom: 1.2rem;
 }
 
 .tabulka-header {
   display: grid;
-  grid-template-columns: 1fr 110px 50px;
-  padding: 0.6rem 1rem;
-  background: rgba(74,144,226,0.12);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  grid-template-columns: 1fr 100px 56px;
+  padding: 0.7rem 1rem;
+  background: #1a365d;
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.15em;
-  color: #4a90e2;
+  color: #90cdf4;
   text-transform: uppercase;
 }
-.tabulka-header span:not(:first-child) { text-align: center; }
+.tabulka-header span:nth-child(2) { text-align: center; }
+.tabulka-header span:nth-child(3) { text-align: center; }
 
 .radek {
   display: grid;
-  grid-template-columns: 1fr 110px 50px;
+  grid-template-columns: 1fr 100px 56px;
   align-items: center;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  transition: background 0.2s;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background 0.15s;
 }
 .radek:last-child { border-bottom: none; }
-.radek:hover { background: rgba(255,255,255,0.03); }
-.radek.chyba { background: rgba(231,76,60,0.07); }
+.radek:hover { background: #f7fafc; }
+.radek.chyba { background: #fff5f5; }
 
 .disc-nazev {
   font-weight: 600;
   font-size: 0.9rem;
-  color: #eef;
+  color: #1a202c;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 .disc-vaha {
-  font-size: 0.6rem;
-  background: rgba(74,144,226,0.25);
-  color: #4a90e2;
+  font-size: 0.58rem;
+  background: #ebf8ff;
+  color: #2b6cb0;
+  border: 1px solid #bee3f8;
   border-radius: 4px;
   padding: 1px 5px;
   font-weight: 700;
+  flex-shrink: 0;
 }
 .disc-jednotka {
   font-size: 0.68rem;
-  color: #666;
+  color: #718096;
   margin-top: 2px;
 }
 .disc-rozsah {
-  font-size: 0.63rem;
-  color: #444;
-  margin-top: 2px;
+  font-size: 0.62rem;
+  color: #a0aec0;
+  margin-top: 1px;
 }
 
 .input-wrap { display: flex; justify-content: center; }
 input[type=number] {
-  width: 90px;
-  padding: 6px 10px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
+  width: 84px;
+  padding: 7px 8px;
+  background: #f7fafc;
+  border: 1.5px solid #cbd5e0;
   border-radius: 8px;
-  color: #fff;
+  color: #1a202c;
   font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
   text-align: center;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
   -moz-appearance: textfield;
 }
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
-input[type=number]:focus { outline: none; border-color: #4a90e2; }
-input[type=number].chyba-input { border-color: rgba(231,76,60,0.5); }
+input[type=number]:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49,130,206,0.15);
+  background: #fff;
+}
+input[type=number].chyba-input {
+  border-color: #fc8181;
+  box-shadow: 0 0 0 3px rgba(252,129,129,0.15);
+}
 
 .odznak-wrap { display: flex; justify-content: center; }
 .odznak {
-  width: 38px; height: 38px;
+  width: 36px; height: 36px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  color: #fff; font-weight: 700; font-size: 1rem;
-  transition: all 0.3s;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
   flex-shrink: 0;
 }
-.odznak-prazdny { color: #555; font-size: 1rem; font-weight: 500; }
+.odznak-prazdny {
+  color: #cbd5e0;
+  font-size: 1.1rem;
+  font-weight: 400;
+}
 
-.vysledek {
-  margin-top: 1.5rem;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
+/* VÝSLEDEK */
+.vysledek-karta {
+  background: #fff;
   border-radius: 16px;
-  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 1.4rem;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -146,38 +174,41 @@ input[type=number].chyba-input { border-color: rgba(231,76,60,0.5); }
 }
 .celkem-label {
   font-family: 'Oswald', sans-serif;
-  font-size: 1rem;
-  letter-spacing: 0.1em;
-  color: #aab;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: #4a5568;
   text-transform: uppercase;
 }
-.celkem-sub { font-size: 0.7rem; color: #555; margin-top: 2px; }
+.celkem-sub { font-size: 0.68rem; color: #a0aec0; margin-top: 2px; }
 .celkem-cislo {
   font-family: 'Oswald', sans-serif;
   font-size: 3rem;
   font-weight: 700;
   line-height: 1;
+  color: #2d3748;
 }
-.celkem-max { font-size: 1.2rem; color: #555; }
+.celkem-max { font-size: 1.1rem; color: #a0aec0; }
 
 .discipliny-row {
-  background: rgba(255,255,255,0.04);
+  background: #f7fafc;
   border-radius: 10px;
-  padding: 0.75rem 1rem;
+  padding: 0.7rem 1rem;
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
-  color: #888;
+  color: #718096;
+  border: 1px solid #e2e8f0;
 }
 
-.mini-tagy { display: flex; flex-wrap: wrap; gap: 6px; }
+.mini-tagy { display: flex; flex-wrap: wrap; gap: 5px; }
 .mini-tag {
-  display: flex; align-items: center; gap: 5px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 8px;
-  padding: 4px 8px;
-  font-size: 0.68rem;
-  color: #777;
+  display: flex; align-items: center; gap: 4px;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.67rem;
+  color: #718096;
 }
 .mini-body { font-weight: 700; }
 
@@ -188,16 +219,16 @@ input[type=number].chyba-input { border-color: rgba(231,76,60,0.5); }
 }
 .verdikt-text {
   font-family: 'Oswald', sans-serif;
-  font-size: 1.5rem;
-  letter-spacing: 0.12em;
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
   font-weight: 700;
 }
-.verdikt-sub { font-size: 0.75rem; color: #666; margin-top: 4px; }
+.verdikt-sub { font-size: 0.75rem; margin-top: 4px; color: #718096; }
 
 .legenda {
   margin-top: 1rem;
   font-size: 0.68rem;
-  color: #444;
+  color: #a0aec0;
   text-align: center;
   line-height: 1.8;
 }
@@ -213,7 +244,7 @@ input[type=number].chyba-input { border-color: rgba(231,76,60,0.5); }
     <p>Ověření limitů · 04/2024</p>
   </div>
 
-  <div class="tabulka">
+  <div class="karta">
     <div class="tabulka-header">
       <span>Disciplína</span>
       <span>Výsledek</span>
@@ -222,7 +253,7 @@ input[type=number].chyba-input { border-color: rgba(231,76,60,0.5); }
     <div id="radky"></div>
   </div>
 
-  <div class="vysledek">
+  <div class="vysledek-karta">
     <div class="celkem-row">
       <div>
         <div class="celkem-label">Celkový počet bodů</div>
@@ -232,22 +263,26 @@ input[type=number].chyba-input { border-color: rgba(231,76,60,0.5); }
         0<span class="celkem-max">/100</span>
       </div>
     </div>
-    <div class="discipliny-row">
-      <span>Vyplněno disciplín</span>
-      <span id="vyplneno-pocet" style="font-weight:600">0 / 10</span>
-    </div>
-    <div class="mini-tagy" id="mini-tagy"></div>
-    <div class="verdikt" id="verdikt" style="display:none"></div>
+
+```
+<div class="discipliny-row">
+  <span>Vyplněno disciplín</span>
+  <span id="vyplneno-pocet" style="font-weight:600;color:#718096">0 / 10</span>
+</div>
+
+<div class="mini-tagy" id="mini-tagy"></div>
+<div class="verdikt" id="verdikt" style="display:none"></div>
+```
+
   </div>
 
   <div class="legenda">
     z každé disciplíny min. 1 bod · celkem min. 50 bodů z 10 disciplín
   </div>
-
 </div>
 
 <script>
-  const discipliny = [
+  var discipliny = [
     { id:"lehsed",   nazev:"Leh-sed",           jednotka:"opak. / 2 min", vaha:8,  vyssi:true,  prahy:[85,87,89,91,93,95,97,99,101,105] },
     { id:"splh",     nazev:"Šplh",              jednotka:"sec.",          vaha:3,  vyssi:false, prahy:[7.40,7.00,6.40,6.20,6.00,5.40,5.20,5.00,4.30,4.00] },
     { id:"cmt",      nazev:"CMT",               jednotka:"opak. / 2 min", vaha:5,  vyssi:true,  prahy:[35,36,37,38,39,40,41,42,43,44] },
@@ -257,91 +292,92 @@ input[type=number].chyba-input { border-color: rgba(231,76,60,0.5); }
     { id:"kliky",    nazev:"Kliky",             jednotka:"opak. / 2 min", vaha:4,  vyssi:true,  prahy:[54,56,58,60,62,64,66,68,70,73] },
     { id:"clunkovy", nazev:"Člunkový běh",      jednotka:"sec.",          vaha:9,  vyssi:false, prahy:[11.6,11.4,11.2,11.0,10.8,10.6,10.4,10.2,10.0,9.8] },
     { id:"prekazky", nazev:"Překážková dráha",  jednotka:"min.",          vaha:10, vyssi:false, prahy:[8.10,7.50,7.40,7.30,7.20,7.10,7.00,6.50,6.40,6.30] },
-    { id:"plavani",  nazev:"Plavání 200 m",     jednotka:"min.",          vaha:1,  vyssi:false, prahy:[4.50,4.40,4.30,4.15,4.00,3.55,3.50,3.45,3.40,3.30] },
+    { id:"plavani",  nazev:"Plavání 200 m",     jednotka:"min.",          vaha:1,  vyssi:false, prahy:[4.50,4.40,4.30,4.15,4.00,3.55,3.50,3.45,3.40,3.30] }
   ];
 
   function ziskejBody(d, hodnota) {
-    if (hodnota === "" || hodnota === null) return null;
-    const v = parseFloat(hodnota);
+    if (hodnota === "" || hodnota === null || hodnota === undefined) return null;
+    var v = parseFloat(hodnota);
     if (isNaN(v)) return null;
     if (d.vyssi) {
-      for (let i = 9; i >= 0; i--) if (v >= d.prahy[i]) return i + 1;
+      for (var i = 9; i >= 0; i--) if (v >= d.prahy[i]) return i + 1;
       return 0;
     } else {
-      for (let i = 9; i >= 0; i--) if (v <= d.prahy[i]) return i + 1;
+      for (var i = 9; i >= 0; i--) if (v <= d.prahy[i]) return i + 1;
       return 0;
     }
   }
 
   function barvaBodu(b) {
-    if (b === null) return "#444";
-    if (b === 0)   return "#e74c3c";
-    if (b >= 9)    return "#00c896";
-    if (b >= 7)    return "#27ae60";
-    if (b >= 4)    return "#f39c12";
-    return "#e67e22";
+    if (b === null) return "#a0aec0";
+    if (b === 0)   return "#e53e3e";
+    if (b >= 9)    return "#38a169";
+    if (b >= 7)    return "#2f855a";
+    if (b >= 4)    return "#d69e2e";
+    return "#dd6b20";
   }
 
   // Vykresli řádky
-  const radkyEl = document.getElementById("radky");
-  discipliny.forEach((d, i) => {
-    const row = document.createElement("div");
-    row.className = "radek";
-    row.id = "radek-" + d.id;
+  var radkyEl = document.getElementById("radky");
+  for (var idx = 0; idx < discipliny.length; idx++) {
+    (function(d, i) {
+      var row = document.createElement("div");
+      row.className = "radek";
+      row.id = "radek-" + d.id;
 
-    row.innerHTML = `
-      <div>
-        <div class="disc-nazev">
-          <span class="disc-vaha">v${d.vaha}</span>
-          ${d.nazev}
-        </div>
-        <div class="disc-jednotka">${d.jednotka}</div>
-        <div class="disc-rozsah">${d.vyssi ? "min. "+d.prahy[0]+" → max. "+d.prahy[9] : "max. "+d.prahy[0]+" → min. "+d.prahy[9]}</div>
-      </div>
-      <div class="input-wrap">
-        <input type="number" step="0.01" placeholder="–" id="input-${d.id}"/>
-      </div>
-      <div class="odznak-wrap">
-        <span class="odznak-prazdny" id="odznak-${d.id}">–</span>
-      </div>
-    `;
-    radkyEl.appendChild(row);
+      var rozsah = d.vyssi
+        ? "min. " + d.prahy[0] + " → max. " + d.prahy[9]
+        : "max. " + d.prahy[0] + " → min. " + d.prahy[9];
 
-    document.getElementById("input-" + d.id).addEventListener("input", aktualizuj);
-  });
+      row.innerHTML =
+        '<div>' +
+          '<div class="disc-nazev">' +
+            '<span class="disc-vaha">v' + d.vaha + '</span>' +
+            d.nazev +
+          '</div>' +
+          '<div class="disc-jednotka">' + d.jednotka + '</div>' +
+          '<div class="disc-rozsah">' + rozsah + '</div>' +
+        '</div>' +
+        '<div class="input-wrap">' +
+          '<input type="number" step="0.01" placeholder="–" id="input-' + d.id + '"/>' +
+        '</div>' +
+        '<div class="odznak-wrap" id="odznak-wrap-' + d.id + '">' +
+          '<span class="odznak-prazdny">–</span>' +
+        '</div>';
+
+      radkyEl.appendChild(row);
+      document.getElementById("input-" + d.id).addEventListener("input", aktualizuj);
+    })(discipliny[idx], idx);
+  }
 
   function aktualizuj() {
-    const vysledky = discipliny.map(d => {
-      const val = document.getElementById("input-" + d.id).value;
-      return { ...d, body: ziskejBody(d, val), val };
-    });
+    var vysledky = [];
+    for (var i = 0; i < discipliny.length; i++) {
+      var d = discipliny[i];
+      var val = document.getElementById("input-" + d.id).value;
+      vysledky.push({ id: d.id, nazev: d.nazev, body: ziskejBody(d, val) });
+    }
 
-    const vyplnene = vysledky.filter(d => d.body !== null);
-    const celkem = vyplnene.reduce((s, d) => s + d.body, 0);
-    const vsechnoVyplneno = vyplnene.length === 10;
-    const maZadneNula = vysledky.some(d => d.body === 0);
-    const splneno = vsechnoVyplneno && !maZadneNula && celkem >= 50;
+    var vyplnene = vysledky.filter(function(d) { return d.body !== null; });
+    var celkem = vyplnene.reduce(function(s, d) { return s + d.body; }, 0);
+    var vsechnoVyplneno = vyplnene.length === 10;
+    var maZadneNula = vysledky.some(function(d) { return d.body === 0; });
+    var splneno = vsechnoVyplneno && !maZadneNula && celkem >= 50;
 
-    // Aktualizuj odznaky a řádky
-    vysledky.forEach(d => {
-      const odznak = document.getElementById("odznak-" + d.id);
-      const radek = document.getElementById("radek-" + d.id);
-      const input = document.getElementById("input-" + d.id);
+    // Odznaky
+    for (var i = 0; i < vysledky.length; i++) {
+      var d = vysledky[i];
+      var wrap = document.getElementById("odznak-wrap-" + d.id);
+      var radek = document.getElementById("radek-" + d.id);
+      var input = document.getElementById("input-" + d.id);
 
       if (d.body === null) {
-        odznak.outerHTML = `<span class="odznak-prazdny" id="odznak-${d.id}">–</span>`;
+        wrap.innerHTML = '<span class="odznak-prazdny">–</span>';
         radek.classList.remove("chyba");
         input.classList.remove("chyba-input");
       } else {
-        const barva = barvaBodu(d.body);
-        const el = document.getElementById("odznak-" + d.id);
-        if (el.tagName === "SPAN") {
-          el.outerHTML = `<div class="odznak" id="odznak-${d.id}" style="background:${barva};box-shadow:0 0 12px ${barva}88">${d.body}</div>`;
-        } else {
-          el.style.background = barva;
-          el.style.boxShadow = "0 0 12px " + barva + "88";
-          el.textContent = d.body;
-        }
+        var barva = barvaBodu(d.body);
+        wrap.innerHTML = '<div class="odznak" style="background:' + barva + '">' + d.body + '</div>';
         if (d.body === 0) {
           radek.classList.add("chyba");
           input.classList.add("chyba-input");
@@ -350,52 +386,52 @@ input[type=number].chyba-input { border-color: rgba(231,76,60,0.5); }
           input.classList.remove("chyba-input");
         }
       }
-    });
+    }
 
-    // Celkový počet
-    const cislEl = document.getElementById("celkem-cislo");
-    const barvaC = celkem >= 50 ? "#00c896" : celkem > 0 ? "#f39c12" : "#555";
-    cislEl.innerHTML = `<span style="color:${barvaC}">${celkem}</span><span class="celkem-max">/100</span>`;
+    // Celkem
+    var barvaC = celkem >= 50 ? "#38a169" : celkem > 0 ? "#d69e2e" : "#a0aec0";
+    document.getElementById("celkem-cislo").innerHTML =
+      '<span style="color:' + barvaC + '">' + celkem + '</span><span class="celkem-max">/100</span>';
 
     // Vyplněno
-    const vypEl = document.getElementById("vyplneno-pocet");
+    var vypEl = document.getElementById("vyplneno-pocet");
     vypEl.textContent = vyplnene.length + " / 10";
-    vypEl.style.color = vyplnene.length === 10 ? "#00c896" : "#f39c12";
+    vypEl.style.color = vyplnene.length === 10 ? "#38a169" : "#d69e2e";
 
     // Mini tagy
-    const tagy = document.getElementById("mini-tagy");
+    var tagy = document.getElementById("mini-tagy");
     tagy.innerHTML = "";
     if (vyplnene.length > 0) {
-      vysledky.forEach(d => {
-        const tag = document.createElement("div");
+      for (var i = 0; i < vysledky.length; i++) {
+        var d = vysledky[i];
+        var tag = document.createElement("div");
         tag.className = "mini-tag";
-        const jmeno = d.nazev.split(" ")[0];
-        tag.innerHTML = `<span>${jmeno}</span>` + (d.body !== null ? `<span class="mini-body" style="color:${barvaBodu(d.body)}">${d.body}</span>` : "");
+        var jmeno = d.nazev.split(" ")[0];
+        tag.innerHTML = '<span>' + jmeno + '</span>' +
+          (d.body !== null ? '<span class="mini-body" style="color:' + barvaBodu(d.body) + '">' + d.body + '</span>' : '');
         tagy.appendChild(tag);
-      });
+      }
     }
 
     // Verdikt
-    const verdikt = document.getElementById("verdikt");
+    var verdikt = document.getElementById("verdikt");
     if (vsechnoVyplneno) {
       verdikt.style.display = "block";
       if (splneno) {
-        verdikt.style.background = "linear-gradient(135deg,rgba(0,200,150,0.15),rgba(0,200,150,0.05))";
-        verdikt.style.border = "1px solid #00c89644";
-        verdikt.innerHTML = `
-          <div class="verdikt-text" style="color:#00c896">✓ ZPŮSOBILÝ</div>
-          <div class="verdikt-sub">Všechny podmínky jsou splněny.</div>
-        `;
+        verdikt.style.background = "#f0fff4";
+        verdikt.style.border = "1.5px solid #9ae6b4";
+        verdikt.innerHTML =
+          '<div class="verdikt-text" style="color:#276749">✓ ZPŮSOBILÝ</div>' +
+          '<div class="verdikt-sub">Všechny podmínky jsou splněny.</div>';
       } else {
-        verdikt.style.background = "linear-gradient(135deg,rgba(231,76,60,0.15),rgba(231,76,60,0.05))";
-        verdikt.style.border = "1px solid #e74c3c44";
-        const duvod = maZadneNula
+        verdikt.style.background = "#fff5f5";
+        verdikt.style.border = "1.5px solid #feb2b2";
+        var duvod = maZadneNula
           ? "Alespoň jedna disciplína nesplňuje minimální limit."
           : "Celkový počet bodů (" + celkem + ") je nižší než požadovaných 50.";
-        verdikt.innerHTML = `
-          <div class="verdikt-text" style="color:#e74c3c">✗ NEZPŮSOBILÝ</div>
-          <div class="verdikt-sub">${duvod}</div>
-        `;
+        verdikt.innerHTML =
+          '<div class="verdikt-text" style="color:#c53030">✗ NEZPŮSOBILÝ</div>' +
+          '<div class="verdikt-sub">' + duvod + '</div>';
       }
     } else {
       verdikt.style.display = "none";
